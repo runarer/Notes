@@ -1,7 +1,13 @@
+using FastEndpoints.Swagger;
+
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddFastEndpoints();
+builder.Services
+    .AddSingleton(TimeProvider.System)
+    .AddFastEndpoints()
+    .SwaggerDocument();
 
 var app = builder.Build();
-app.UseFastEndpoints();
+app.UseFastEndpoints()
+   .UseSwaggerGen();
 
 app.Run();
