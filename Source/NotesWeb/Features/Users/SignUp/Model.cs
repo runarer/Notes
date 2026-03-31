@@ -11,12 +11,12 @@ public class Request
 
 public class Response
 {
-    public Guid Id;
+    public Guid Id { get; set; }
     public string? FullName { get; set; }
     public required string Username { get; set; }
     public required string Email { get; set; }
-    public DateTimeOffset CreatedAtUtc;
-    public DateTimeOffset UpdatedAtUtc;
+    public DateTimeOffset CreatedAtUtc { get; set; }
+    public DateTimeOffset UpdatedAtUtc { get; set; }
 }
 
 public class Validator : Validator<Request>
