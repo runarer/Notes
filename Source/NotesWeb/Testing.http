@@ -1,0 +1,10 @@
+@Host = http://localhost:5295/
+
+POST {{Host}}users
+Content-Type: application/json
+
+{
+    "username" : "Bob",
+    "email" : "youuu@me.com",
+    "password" : "adersasdeda"
+}
