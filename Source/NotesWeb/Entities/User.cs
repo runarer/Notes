@@ -1,9 +1,11 @@
 
+using System.ComponentModel.DataAnnotations;
+
 namespace NotesWeb.Entities;
 
 public class User
 {
-    public Guid Id;
+    public int Id { get; set; }
     public required string Username { get; set; }
     public required string Email { get; set; }
     public required string HashedPassword { get; set; }
