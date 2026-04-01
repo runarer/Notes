@@ -1,13 +1,17 @@
 using FastEndpoints.Swagger;
+using Microsoft.EntityFrameworkCore;
+using NotesWeb.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services
-    .AddSingleton(TimeProvider.System)
-    .AddFastEndpoints()
-    .SwaggerDocument();
+builder.Services.AddDbContext<NoteBoardDBContext>(
+    options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddFastEndpoints();
+builder.Services.SwaggerDocument();
 
 var app = builder.Build();
-app.UseFastEndpoints()
-   .UseSwaggerGen();
+app.UseFastEndpoints();
+app.UseSwaggerGen();
 
 app.Run();
