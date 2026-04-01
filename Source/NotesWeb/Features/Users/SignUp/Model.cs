@@ -1,4 +1,6 @@
 
+using NotesWeb.Features.Users.SignUp.Persistence;
+
 namespace NotesWeb.Features.Users.SignUp;
 
 public class Request
