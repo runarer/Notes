@@ -15,6 +15,10 @@ builder.Services.AddScoped<
     NotesWeb.Features.Users.SignUp.Persistence.ISignUpRepository,
     NotesWeb.Features.Users.SignUp.Persistence.SignUpRepository>();
 
+builder.Services.AddScoped<
+    NotesWeb.Features.Users.Login.Persistence.IUserLoginRepository,
+    NotesWeb.Features.Users.Login.Persistence.UserLoginRepository>();
+
 
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddAuthenticationJwtBearer(s => s.SigningKey = "secret")
