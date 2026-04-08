@@ -1,4 +1,5 @@
 using FastEndpoints.Swagger;
+using FastEndpoints.Security;
 using Microsoft.EntityFrameworkCore;
 using NotesWeb.Data;
 
@@ -12,11 +13,16 @@ builder.Services.AddScoped<
 
 
 builder.Services.AddSingleton(TimeProvider.System);
-builder.Services.AddFastEndpoints();
+builder.Services.AddAuthenticationJwtBearer(s => s.SigningKey = "secret")
+                .AddAuthorization()
+                .AddFastEndpoints();
 builder.Services.SwaggerDocument();
 
 var app = builder.Build();
-app.UseFastEndpoints();
+app.UseAuthentication()
+   .UseAuthorization()
+   .UseFastEndpoints();
+
 app.UseSwaggerGen();
 
 app.Run();
