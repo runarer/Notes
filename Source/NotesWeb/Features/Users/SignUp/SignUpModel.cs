@@ -33,7 +33,7 @@ public class Validator : Validator<Request>
             .EmailAddress().WithMessage("Email providet not valid");
 
         RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("You need to privede a password")
+            .NotEmpty().WithMessage("You need to provide a password")
             .MinimumLength(6).WithMessage("Password to short")
             .MaximumLength(30).WithMessage("Password is to long");
     }

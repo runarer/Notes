@@ -1,4 +1,5 @@
 
+using FastEndpoints.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using NotesWeb.Entities;
@@ -13,7 +14,7 @@ public class UserLoginEndpoint(IUserLoginRepository userLoginRepository, IPasswo
 
     public override void Configure()
     {
-        Post("/api/login");
+        Post("/api/users/login");
         AllowAnonymous();
     }
 
@@ -37,9 +38,16 @@ public class UserLoginEndpoint(IUserLoginRepository userLoginRepository, IPasswo
         }
 
         // User exsists and got right password, bu it might need Rehash. Rehash not supported.
-        //Creae JWT
+        //Create JWT
+        var jwtToken = JwtBearer.CreateToken(o =>
+        {
+            o.SigningKey = "My big secret needs to be longer"; // get this secret from an external place
+            o.ExpireAt = DateTime.UtcNow.AddMinutes(30);
+            o.User.Roles.Add("User");
+            o.User["UserId"] = user.Id.ToString();
+        });
 
-
+        await Send.OkAsync(new { user.Email, Token = jwtToken }, ct);
     }
 }
 
