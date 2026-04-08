@@ -2,10 +2,14 @@ using FastEndpoints.Swagger;
 using FastEndpoints.Security;
 using Microsoft.EntityFrameworkCore;
 using NotesWeb.Data;
+using Microsoft.AspNetCore.Identity;
+using NotesWeb.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<NoteBoardDBContext>(
     options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 
 builder.Services.AddScoped<
     NotesWeb.Features.Users.SignUp.Persistence.ISignUpRepository,

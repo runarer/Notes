@@ -1,13 +1,16 @@
+
+using Microsoft.AspNetCore.Identity;
 using NotesWeb.Entities;
 using NotesWeb.Features.Users.SignUp.Persistence;
 
 namespace NotesWeb.Features.Users.SignUp;
 
-public class Endpoint(TimeProvider timeProvider, ISignUpRepository signUpRepository) : Endpoint<Request, Response, Mapper>
+public class SignUpEndpoint(TimeProvider timeProvider, ISignUpRepository signUpRepository, IPasswordHasher<User> passwordHasher) : Endpoint<Request, Response, SignUpMapper>
 {
 
     private readonly TimeProvider _timeProvider = timeProvider;
     private readonly ISignUpRepository _signUpRepository = signUpRepository;
+    private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
 
     public override void Configure()
     {
@@ -29,7 +32,7 @@ public class Endpoint(TimeProvider timeProvider, ISignUpRepository signUpReposit
 
         ThrowIfAnyErrors();
 
-        // TODO: write user to DB
+        user.HashedPassword = _passwordHasher.HashPassword(user, user.HashedPassword);
         user.CreatedAtUtc = _timeProvider.GetUtcNow();
         user.UpdatedAtUtc = user.CreatedAtUtc;
 

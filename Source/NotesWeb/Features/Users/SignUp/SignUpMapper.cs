@@ -3,14 +3,15 @@ using NotesWeb.Entities;
 
 namespace NotesWeb.Features.Users.SignUp;
 
-public class Mapper : Mapper<Request, Response, User>
+public class SignUpMapper : Mapper<Request, Response, User>
 {
+
     public override User ToEntity(Request r) => new()
     {
         FullName = r.FullName,
         Username = r.Username,
         Email = r.Email.ToLowerInvariant(),
-        HashedPassword = r.Password, //TODO Add hashing of password
+        HashedPassword = r.Password,
     };
 
     public override Response FromEntity(User e) => new()
