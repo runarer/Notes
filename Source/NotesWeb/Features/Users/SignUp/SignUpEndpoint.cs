@@ -14,7 +14,7 @@ public class SignUpEndpoint(TimeProvider timeProvider, ISignUpRepository signUpR
 
     public override void Configure()
     {
-        Post("/users");
+        Post("/api/users/signup");
         AllowAnonymous();
     }
 
