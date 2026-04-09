@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using NotesWeb.Data;
 using Microsoft.AspNetCore.Identity;
 using NotesWeb.Entities;
+using NotesWeb.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<NoteBoardDBContext>(
@@ -33,6 +34,11 @@ app.UseAuthentication()
    .UseAuthorization()
    .UseFastEndpoints();
 
-app.UseSwaggerGen();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwaggerGen();
+    app.ApplyMigrations();
+}
+
 
 app.Run();
