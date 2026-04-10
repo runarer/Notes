@@ -1,13 +1,13 @@
 
 using FastEndpoints.Security;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
+// using Microsoft.AspNetCore.Identity.Data;
 using NotesWeb.Entities;
 using NotesWeb.Features.Users.Login.Persistence;
 
 namespace NotesWeb.Features.Users.Login;
 
-public class UserLoginEndpoint(IUserLoginRepository userLoginRepository, IPasswordHasher<User> passwordHasher) : Endpoint<LoginRequest>
+public class UserLoginEndpoint(IUserLoginRepository userLoginRepository, IPasswordHasher<User> passwordHasher) : Endpoint<Request, Response>
 {
     private readonly IUserLoginRepository _userLoginRepository = userLoginRepository;
     private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
@@ -18,7 +18,7 @@ public class UserLoginEndpoint(IUserLoginRepository userLoginRepository, IPasswo
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(LoginRequest request, CancellationToken ct)
+    public override async Task HandleAsync(Request request, CancellationToken ct)
     {
         User? user = await _userLoginRepository.GetUserByEmail(request.Email, ct);
 
@@ -47,7 +47,7 @@ public class UserLoginEndpoint(IUserLoginRepository userLoginRepository, IPasswo
             o.User["UserId"] = user.Id.ToString();
         });
 
-        await Send.OkAsync(new { user.Email, Token = jwtToken }, ct);
+        await Send.OkAsync(new Response() { Token = jwtToken }, ct);
     }
 }
 
