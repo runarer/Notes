@@ -37,8 +37,8 @@ app.UseAuthentication()
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerGen();
-    app.ApplyMigrations();
 }
 
+app.ApplyMigrations();
 
 app.Run();
