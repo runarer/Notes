@@ -39,6 +39,4 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerGen();
 }
 
-app.ApplyMigrations();
-
 app.Run();
