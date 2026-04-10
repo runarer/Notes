@@ -32,7 +32,10 @@ builder.Services.SwaggerDocument();
 var app = builder.Build();
 app.UseAuthentication()
    .UseAuthorization()
-   .UseFastEndpoints();
+   .UseFastEndpoints(c =>
+   {
+       c.Errors.UseProblemDetails();
+   });
 
 if (app.Environment.IsDevelopment())
 {
