@@ -1,12 +1,6 @@
 
-// using System.Data.Common;
-// using Microsoft.EntityFrameworkCore;
-// using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-// using Microsoft.Extensions.DependencyInjection.Extensions;
-// using NotesWeb.Features.Users.SignUp.Persistence;
 using NotesWeb.Data;
 using Testcontainers.PostgreSql;
 
@@ -29,45 +23,9 @@ public class App : AppFixture<Program>, IAsyncLifetime
         {
             options.UseNpgsql(_postgreSqlContainer!.GetConnectionString());
         });
-
-
-        // services.AddSingleton<ISignUpRepository, Features.Users.SignUp.InMemorySignUpRepository>();
-        // var dbContextDescriptor = services.SingleOrDefault(
-        //     d => d.ServiceType ==
-        //         typeof(IDbContextOptionsConfiguration<NoteBoardDBContext>)) ?? throw new InvalidOperationException("dbContextDescriptor is null");
-
-        // services.Remove(dbContextDescriptor);
-
-        // var dbConnectionDescriptor = services.SingleOrDefault(
-        //     d => d.ServiceType ==
-        //         typeof(DbConnection));// ?? throw new InvalidCastException("dbConnectionDescriptor is null");
-
-        // services.Remove(dbConnectionDescriptor);
-
-        // // Create open SqliteConnection so EF won't automatically close it.
-        // services.AddSingleton<DbConnection>(container =>
-        // {
-        //     var connection = new SqliteConnection("DataSource=:memory:");
-        //     connection.Open();
-
-        //     return connection;
-        // });
-
-        // services.AddDbContext<NoteBoardDBContext>((container, options) =>
-        // {
-        //     var connection = container.GetRequiredService<DbConnection>();
-        //     options.UseSqlite(connection);
-        // });
     }
 
 
-    // protected override async ValueTask SetupAsync()
-    // {
-    //     using var scope = Services.CreateScope();
-    //     await using var dbContext = scope.ServiceProvider.GetRequiredService<NoteBoardDBContext>();
-    //     await dbContext.Database.MigrateAsync();
-    // }
-    // This runs once per assembly
     protected override async ValueTask PreSetupAsync()
     {
 
@@ -103,14 +61,5 @@ public class App : AppFixture<Program>, IAsyncLifetime
         using var dbContext = serviceProvider.GetRequiredService<NoteBoardDBContext>();
         await dbContext.Database.MigrateAsync();
     }
-
-
-    protected override async ValueTask TearDownAsync()
-    {
-        // do cleanups here
-        // This may not be needed
-        await _postgreSqlContainer!.StopAsync();
-    }
-
 }
 

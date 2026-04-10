@@ -27,4 +27,8 @@
     <ProjectReference Include="..\..\Source\NotesWeb\NotesWeb.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Users\Login\" />
+  </ItemGroup>
+
 </Project>
