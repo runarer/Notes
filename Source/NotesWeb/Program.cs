@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using NotesWeb.Data;
 using Microsoft.AspNetCore.Identity;
 using NotesWeb.Entities;
-using NotesWeb.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<NoteBoardDBContext>(

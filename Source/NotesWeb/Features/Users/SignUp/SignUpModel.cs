@@ -25,16 +25,16 @@ public class Validator : Validator<Request>
     {
         RuleFor(x => x.Username)
             .NotEmpty().WithMessage("You need to provide a username")
-            .MinimumLength(3).WithMessage("Username to short")
-            .MaximumLength(16).WithMessage("Username to long");
+            .MinimumLength(3).WithMessage("Username is to short")
+            .MaximumLength(16).WithMessage("Username is to long");
 
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("You need to provide an email address")
-            .EmailAddress().WithMessage("Email providet not valid");
+            .EmailAddress().WithMessage("Email providet is not a valid email");
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("You need to provide a password")
-            .MinimumLength(6).WithMessage("Password to short")
+            .MinimumLength(6).WithMessage("Password is to short")
             .MaximumLength(30).WithMessage("Password is to long");
     }
 }
