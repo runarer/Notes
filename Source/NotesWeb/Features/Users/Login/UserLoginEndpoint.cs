@@ -14,7 +14,7 @@ public class UserLoginEndpoint(IUserLoginRepository userLoginRepository, IPasswo
 
     public override void Configure()
     {
-        Post("/api/users/login");
+        Post("/users/login");
         AllowAnonymous();
     }
 

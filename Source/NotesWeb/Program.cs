@@ -35,6 +35,7 @@ app.UseDefaultExceptionHandler();
 app.UseFastEndpoints(c =>
    {
        c.Errors.UseProblemDetails();
+       c.Endpoints.RoutePrefix = "api";
    });
 
 if (app.Environment.IsDevelopment())
