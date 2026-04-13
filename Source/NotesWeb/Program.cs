@@ -29,9 +29,10 @@ builder.Services.AddFastEndpoints();
 builder.Services.SwaggerDocument();
 
 var app = builder.Build();
-app.UseAuthentication()
-   .UseAuthorization()
-   .UseFastEndpoints(c =>
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseDefaultExceptionHandler();
+app.UseFastEndpoints(c =>
    {
        c.Errors.UseProblemDetails();
    });
