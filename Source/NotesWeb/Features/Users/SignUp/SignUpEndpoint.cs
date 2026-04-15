@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using NotesWeb.Entities;
 using NotesWeb.Features.Users.SignUp.Persistence;
+using NotesWeb.Commons.Preprocessors;
 
 namespace NotesWeb.Features.Users.SignUp;
 
@@ -15,6 +16,8 @@ public class SignUpEndpoint(TimeProvider timeProvider, ISignUpRepository signUpR
     public override void Configure()
     {
         Post("/users/signup");
+        PreProcessor<SignUpPreProcessor>();
+        PostProcessor<NoteWebResponseLogger<Request, Response>>();
         AllowAnonymous();
     }
 

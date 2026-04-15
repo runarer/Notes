@@ -26,6 +26,7 @@ builder.Services.AddAuthenticationJwtBearer(s => s.SigningKey = "secret");
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("Users", x => x.RequireRole("User").RequireClaim("UserId")); // This might not be needed
 builder.Services.AddFastEndpoints();
+
 builder.Services.SwaggerDocument();
 
 var app = builder.Build();
@@ -33,10 +34,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseDefaultExceptionHandler();
 app.UseFastEndpoints(c =>
-   {
-       c.Errors.UseProblemDetails();
-       c.Endpoints.RoutePrefix = "api";
-   });
+{
+    c.Errors.UseProblemDetails();
+    c.Endpoints.RoutePrefix = "api";
+});
 
 if (app.Environment.IsDevelopment())
 {

@@ -1,7 +1,6 @@
 
 using FastEndpoints.Security;
 using Microsoft.AspNetCore.Identity;
-// using Microsoft.AspNetCore.Identity.Data;
 using NotesWeb.Entities;
 using NotesWeb.Features.Users.Login.Persistence;
 
@@ -15,7 +14,10 @@ public class UserLoginEndpoint(IUserLoginRepository userLoginRepository, IPasswo
     public override void Configure()
     {
         Post("/users/login");
+        PreProcessor<UserLoginPreProcessor>();
+        PostProcessor<UserLoginPostProcessor>();
         AllowAnonymous();
+
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)
