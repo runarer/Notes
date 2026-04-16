@@ -2,6 +2,7 @@ using FastEndpoints.Swagger;
 using FastEndpoints.Security;
 using Microsoft.EntityFrameworkCore;
 using NotesWeb.Data;
+using NotesWeb.Commons;
 using Microsoft.AspNetCore.Identity;
 using NotesWeb.Entities;
 using OpenTelemetry.Logs;
@@ -20,7 +21,7 @@ builder.Logging.AddOpenTelemetry(options =>
 
     options.IncludeFormattedMessage = true; // Includes the readable message
     options.IncludeScopes = true;          // Captures properties from ILogger.BeginScope
-
+    options.AddProcessor(new RedactionProcessor());
     options.AddOtlpExporter(otlpOptions =>
     {
         otlpOptions.Endpoint = new Uri("http://localhost:5341/ingest/otlp/v1/logs");
