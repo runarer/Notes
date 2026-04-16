@@ -1,10 +1,11 @@
 using System.Collections;
+using System.Text.RegularExpressions;
 using OpenTelemetry;
 using OpenTelemetry.Logs;
 
 namespace NotesWeb.Commons;
 
-internal sealed class RedactionProcessor : BaseProcessor<LogRecord>
+internal sealed partial class RedactionProcessor : BaseProcessor<LogRecord>
 {
     public override void OnEnd(LogRecord logRecord)
     {
@@ -26,16 +27,23 @@ internal sealed class RedactionProcessor : BaseProcessor<LogRecord>
             {
                 var item = state[index];
                 var entryVal = item.Value?.ToString();
-                if (entryVal != null && entryVal.Contains("token"))
+
+                if (entryVal != null)
                 {
-                    return new KeyValuePair<string, object?>(item.Key, "***REDACTED***");
-                }
-                if (entryVal != null && entryVal.Contains("password"))
-                {
-                    return new KeyValuePair<string, object?>(item.Key, "***REDACTED***");
+                    // Redact passwords
+                    var redactedValue = PasswordRegex.Replace(entryVal, "\"password\":\"***PASSWORD-REDACTED***\"");
+
+                    // Redact token
+                    redactedValue = TokenRegex.Replace(redactedValue, "\"token\":\"***TOKEN-REDACTED***\"");
+
+                    if (redactedValue != entryVal)
+                    {
+                        return new KeyValuePair<string, object?>(item.Key, redactedValue);
+                    }
                 }
 
                 return item;
+
             }
         }
 
@@ -52,5 +60,11 @@ internal sealed class RedactionProcessor : BaseProcessor<LogRecord>
             return this.GetEnumerator();
         }
     }
+
+    [GeneratedRegex(@"""password""\s*:\s*"".*""", RegexOptions.IgnoreCase)]
+    private static partial Regex PasswordRegex { get; }
+
+    [GeneratedRegex(@"""token""\s*:\s*"".*""", RegexOptions.IgnoreCase)]
+    private static partial Regex TokenRegex { get; }
 }
 

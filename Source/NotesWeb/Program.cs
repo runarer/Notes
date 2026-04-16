@@ -10,14 +10,17 @@ using OpenTelemetry.Exporter;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Microsoft.AspNetCore.HttpLogging;
+using OpenTelemetry.Metrics;
 
 var builder = WebApplication.CreateBuilder(args);
+
+const string serviceName = "NoteWeb";
 
 builder.Logging.ClearProviders();
 builder.Logging.AddOpenTelemetry(options =>
 {
     options.SetResourceBuilder(ResourceBuilder.CreateDefault()
-        .AddService("NoteWeb")); // Identify your service
+        .AddService(serviceName)); // Identify your service
 
     options.IncludeFormattedMessage = true; // Includes the readable message
     options.IncludeScopes = true;          // Captures properties from ILogger.BeginScope
