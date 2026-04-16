@@ -16,8 +16,8 @@ public class SignUpEndpoint(TimeProvider timeProvider, ISignUpRepository signUpR
     public override void Configure()
     {
         Post("/users/signup");
-        PreProcessor<SignUpPreProcessor>();
-        PostProcessor<NoteWebResponseLogger<Request, Response>>();
+        // PreProcessor<SignUpPreProcessor>();
+        // PostProcessor<NoteWebResponseLogger<Request, Response>>();
         AllowAnonymous();
     }
 

@@ -14,8 +14,8 @@ public class UserLoginEndpoint(IUserLoginRepository userLoginRepository, IPasswo
     public override void Configure()
     {
         Post("/users/login");
-        PreProcessor<UserLoginPreProcessor>();
-        PostProcessor<UserLoginPostProcessor>();
+        // PreProcessor<UserLoginPreProcessor>();
+        // PostProcessor<UserLoginPostProcessor>();
         AllowAnonymous();
 
     }

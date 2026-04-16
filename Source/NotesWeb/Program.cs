@@ -4,8 +4,30 @@ using Microsoft.EntityFrameworkCore;
 using NotesWeb.Data;
 using Microsoft.AspNetCore.Identity;
 using NotesWeb.Entities;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Microsoft.AspNetCore.HttpLogging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Logging.AddOpenTelemetry(options =>
+{
+    options.SetResourceBuilder(ResourceBuilder.CreateDefault()
+        .AddService("NoteWeb")); // Identify your service
+
+    options.IncludeFormattedMessage = true; // Includes the readable message
+    options.IncludeScopes = true;          // Captures properties from ILogger.BeginScope
+
+    options.AddOtlpExporter(otlpOptions =>
+    {
+        otlpOptions.Endpoint = new Uri("http://localhost:5341/ingest/otlp/v1/logs");
+        otlpOptions.Protocol = OtlpExportProtocol.HttpProtobuf;
+    });
+});
+
 builder.Services.AddDbContext<NoteBoardDBContext>(
     options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -29,7 +51,13 @@ builder.Services.AddFastEndpoints();
 
 builder.Services.SwaggerDocument();
 
+builder.Services.AddHttpLogging(logging =>
+{
+    logging.LoggingFields = HttpLoggingFields.All; // Customize based on PII/Performance needs
+});
+
 var app = builder.Build();
+app.UseHttpLogging();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseDefaultExceptionHandler();
