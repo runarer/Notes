@@ -14,8 +14,6 @@ public class UserLoginEndpoint(IUserLoginRepository userLoginRepository, IPasswo
     public override void Configure()
     {
         Post("/users/login");
-        // PreProcessor<UserLoginPreProcessor>();
-        // PostProcessor<UserLoginPostProcessor>();
         AllowAnonymous();
 
     }
@@ -41,9 +39,15 @@ public class UserLoginEndpoint(IUserLoginRepository userLoginRepository, IPasswo
 
         // User exsists and got right password, bu it might need Rehash. Rehash not supported.
         //Create JWT
+        var jwtSecret = Config["Auth:JwtSecretKey"];
+        if (jwtSecret is null)
+        {
+            Logger.LogCritical("Auth:JwtSecretKey is null");
+            ThrowError("Issue #auth:JwtSecretKey", 500);
+        }
         var jwtToken = JwtBearer.CreateToken(o =>
         {
-            o.SigningKey = "My big secret needs to be longer"; // get this secret from an external place
+            o.SigningKey = jwtSecret; // get this secret from an external place
             o.ExpireAt = DateTime.UtcNow.AddMinutes(30);
             o.User.Roles.Add("User");
             o.User["UserId"] = user.Id.ToString();

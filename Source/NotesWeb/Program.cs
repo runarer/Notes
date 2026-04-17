@@ -16,6 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 const string serviceName = "NoteWeb";
 
+var jwtkey = builder.Configuration["Auth:JwtSecretKey"];
+
 builder.Logging.ClearProviders();
 builder.Logging.AddOpenTelemetry(options =>
 {
@@ -27,9 +29,12 @@ builder.Logging.AddOpenTelemetry(options =>
     options.AddProcessor(new RedactionProcessor());
     options.AddOtlpExporter(otlpOptions =>
     {
-        otlpOptions.Endpoint = new Uri("http://localhost:5341/ingest/otlp/v1/logs");
+        var location = builder.Configuration["Seq:Location"] ?? "http://localhost:5341/ingest/otlp/v1/logs";
+        otlpOptions.Endpoint = new Uri(location);
         otlpOptions.Protocol = OtlpExportProtocol.HttpProtobuf;
     });
+    if (builder.Environment.IsDevelopment())
+        options.AddConsoleExporter();
 });
 
 builder.Services.AddDbContext<NoteBoardDBContext>(
@@ -48,7 +53,7 @@ builder.Services.AddScoped<
 
 
 builder.Services.AddSingleton(TimeProvider.System);
-builder.Services.AddAuthenticationJwtBearer(s => s.SigningKey = "secret");
+builder.Services.AddAuthenticationJwtBearer(s => s.SigningKey = jwtkey);
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("Users", x => x.RequireRole("User").RequireClaim("UserId")); // This might not be needed
 builder.Services.AddFastEndpoints();
