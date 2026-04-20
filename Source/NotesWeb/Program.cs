@@ -33,8 +33,8 @@ builder.Logging.AddOpenTelemetry(options =>
         otlpOptions.Endpoint = new Uri(location);
         otlpOptions.Protocol = OtlpExportProtocol.HttpProtobuf;
     });
-    if (builder.Environment.IsDevelopment())
-        options.AddConsoleExporter();
+    // if (builder.Environment.IsDevelopment())
+    options.AddConsoleExporter();
 });
 
 builder.Services.AddDbContext<NoteBoardDBContext>(
@@ -76,9 +76,13 @@ app.UseFastEndpoints(c =>
     c.Endpoints.RoutePrefix = "api";
 });
 
-if (app.Environment.IsDevelopment())
+// if (app.Environment.IsDevelopment())
+// {
+app.UseSwaggerGen();
+// }
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwaggerGen();
+    var db = scope.ServiceProvider.GetRequiredService<NoteBoardDBContext>();
+    db.Database.Migrate();
 }
-
 app.Run();

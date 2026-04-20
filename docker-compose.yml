@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgres:latest    
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: ${DB_USER:?PostgreSql need a username}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?PostgreSql need a password}
+      POSTGRES_DB: ${DB_DATABASE:?PostgreSql need a named database}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql_2/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_DATABASE}"]
+      interval: 5s
+      timeout: 30s
+      retries: 10
+  seq:
+    image: datalust/seq:latest
+    container_name: seq_log
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_ADMINPASSWORD=${SEQ_ADMIN_PASSWORD:?Seq need password}  # Initial admin password
+    ports: # Web UI and API
+      - "5342:80"
+      - "5341:5341"
+    volumes:
+      - seqdata:/var/lib/seq/data  # Persistent storage for logs and config
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_ui
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:?PgAdmin need email}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:?PgAdmin need password}
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  notesweb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings:DefaultConnection: Host=db;Port=5432;Database=${DB_DATABASE};User Id=${DB_USER};Password=${DB_PASSWORD}
+      Seq:Location: http://seq:5341/${SEQ_LOCATION}
+      Auth:JwtSecretKey: ${JWT_SECRET:?NotesWeb need JwtSecretKey}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  pgadmin_data:
+  seqdata:
