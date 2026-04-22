@@ -42,20 +42,6 @@ builder.Services.AddDbContext<NoteBoardDBContext>(
 
 builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 
-//TODO: Flytt til en exension class, eller bruk source generator for å finne og registrere repositories */
-builder.Services.AddScoped<
-    NotesWeb.Features.Users.SignUp.Persistence.ISignUpRepository,
-    NotesWeb.Features.Users.SignUp.Persistence.SignUpRepository>();
-
-builder.Services.AddScoped<
-    NotesWeb.Features.Users.Login.Persistence.IUserLoginRepository,
-    NotesWeb.Features.Users.Login.Persistence.UserLoginRepository>();
-
-builder.Services.AddScoped<
-    NotesWeb.Features.ToDo.ToDoLists.CreateList.Persistence.ICreateListRepository,
-    NotesWeb.Features.ToDo.ToDoLists.CreateList.Persistence.CreateListRepository>();
-
-
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddAuthenticationJwtBearer(s => s.SigningKey = jwtkey);
 builder.Services.AddAuthorizationBuilder()

@@ -1,11 +1,13 @@
 
-using NotesWeb.Features.ToDo.ToDoLists.DeleteList.Persistence;
+using Microsoft.EntityFrameworkCore;
+using NotesWeb.Data;
 
 namespace NotesWeb.Features.ToDo.ToDoLists.DeleteList;
 
-public class DeleteListEndpoint(IDeleteListRepository deleteListRepository) : Endpoint<Request>
+public class DeleteListEndpoint(NoteBoardDBContext dbContext) : Endpoint<Request>
 {
-    private readonly IDeleteListRepository _deleteListRepository = deleteListRepository;
+    private readonly NoteBoardDBContext _dbContext = dbContext;
+
     public override void Configure()
     {
         Delete("/todo/{ListId}");
@@ -15,6 +17,6 @@ public class DeleteListEndpoint(IDeleteListRepository deleteListRepository) : En
 
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
-        await _deleteListRepository.DeleteList(request.ListId, request.UserId, ct);
+        await _dbContext.ToDoLists.Where(list => list.Id == request.ListId && list.UserId == request.UserId).ExecuteDeleteAsync(ct);
     }
 }

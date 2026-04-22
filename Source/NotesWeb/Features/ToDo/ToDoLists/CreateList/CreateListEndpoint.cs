@@ -1,15 +1,17 @@
 
 
+using Microsoft.EntityFrameworkCore;
+using NotesWeb.Data;
 using NotesWeb.Entities;
-using NotesWeb.Features.ToDo.ToDoLists.CreateList.Persistence;
 
 namespace NotesWeb.Features.ToDo.ToDoLists.CreateList;
 
-public class CreateListEndpoint(TimeProvider timeProvider, ICreateListRepository createListRepository) : Endpoint<Request, Response, Mapper>
+public class CreateListEndpoint(TimeProvider timeProvider, NoteBoardDBContext dbContext) : Endpoint<Request, Response, Mapper>
 {
 
-    private readonly ICreateListRepository _createListRepository = createListRepository;
     private readonly TimeProvider _timeProvider = timeProvider;
+    private readonly NoteBoardDBContext _dbContext = dbContext;
+
     public override void Configure()
     {
         Post("/todo");
@@ -21,18 +23,17 @@ public class CreateListEndpoint(TimeProvider timeProvider, ICreateListRepository
     {
         ToDoList todoList = Map.ToEntity(request);
 
+        bool userExists = await _dbContext.Users.AnyAsync(user => user.Id == request.UserId, ct);
+        if (!userExists)
+            AddError(r => r.UserId, "this user do not exist!");
 
-        // this code was for better error messages, but if the user dont exists there are errors elsewere
-        //         bool userExists = await _createListRepository.UserExistsAsync(todoList.UserId, ct);
-        //         if (!userExists)
-        //             AddError(r => r.UserId, "this user do not exist!");
-
-        //         ThrowIfAnyErrors();
+        ThrowIfAnyErrors();
 
         todoList.CreatedAtUtc = _timeProvider.GetUtcNow();
         todoList.UpdatedAtUtc = todoList.CreatedAtUtc;
 
-        await _createListRepository.CreateList(todoList, ct);
+        await _dbContext.ToDoLists.AddAsync(todoList, ct);
+        await _dbContext.SaveChangesAsync(ct);
 
         var response = Map.FromEntity(todoList);
         await Send.CreatedAtAsync("/todo/", new { todoList.Id }, response, cancellation: ct);
