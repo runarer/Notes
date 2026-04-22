@@ -51,6 +51,10 @@ builder.Services.AddScoped<
     NotesWeb.Features.Users.Login.Persistence.IUserLoginRepository,
     NotesWeb.Features.Users.Login.Persistence.UserLoginRepository>();
 
+builder.Services.AddScoped<
+    NotesWeb.Features.ToDo.ToDoLists.CreateList.Persistence.ICreateListRepository,
+    NotesWeb.Features.ToDo.ToDoLists.CreateList.Persistence.CreateListRepository>();
+
 
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddAuthenticationJwtBearer(s => s.SigningKey = jwtkey);
