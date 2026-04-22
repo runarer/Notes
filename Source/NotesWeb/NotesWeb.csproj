@@ -14,14 +14,22 @@
     <Folder Include="Extensions\" />
     <Folder Include="Features\ToDo\ToDoItems\" />
     <Folder Include="Features\ToDo\ToDoItems\CompleteToDoItem\" />
+    <Folder Include="Features\ToDo\ToDoItems\CompleteToDoItem\Persistence\" />
     <Folder Include="Features\ToDo\ToDoItems\CreateToDoItem\" />
+    <Folder Include="Features\ToDo\ToDoItems\CreateToDoItem\Persistence\" />
     <Folder Include="Features\ToDo\ToDoItems\DeleteToDoItem\" />
+    <Folder Include="Features\ToDo\ToDoItems\DeleteToDoItem\Persistence\" />
     <Folder Include="Features\ToDo\ToDoItems\GetList\" />
+    <Folder Include="Features\ToDo\ToDoItems\GetList\Persistence\" />
     <Folder Include="Features\ToDo\ToDoItems\MoveToDoItem\" />
+    <Folder Include="Features\ToDo\ToDoItems\MoveToDoItem\Persistence\" />
     <Folder Include="Features\ToDo\ToDoItems\UpdateToDoItem\" />
+    <Folder Include="Features\ToDo\ToDoItems\UpdateToDoItem\Persistence\" />
     <Folder Include="Features\ToDo\ToDoLists\DeleteList\" />
+    <Folder Include="Features\ToDo\ToDoLists\DeleteList\Persistence\" />
     <Folder Include="Features\ToDo\ToDoLists\GetLists\" />
-    <Folder Include="Features\ToDo\ToDoLists\RenameList\" />
+    <Folder Include="Features\ToDo\ToDoLists\GetLists\Persistence\" />
+    <Folder Include="Features\ToDo\ToDoLists\RenameList\Persistence\" />
     <Folder Include="Features\Users\SignUp\Persistence\" />
   </ItemGroup>
 
