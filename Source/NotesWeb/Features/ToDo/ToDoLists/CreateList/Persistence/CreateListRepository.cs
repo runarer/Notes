@@ -15,8 +15,8 @@ public class CreateListRepository(NoteBoardDBContext dbContext) : ICreateListRep
         return list;
     }
 
-    public async Task<bool> UserExistsAsync(int userId, CancellationToken ct)
-    {
-        return await _dbContext.Users.AnyAsync(user => user.Id == userId, ct);
-    }
+    // public async Task<bool> UserExistsAsync(int userId, CancellationToken ct)
+    // {
+    //     return await _dbContext.Users.AnyAsync(user => user.Id == userId, ct);
+    // }
 }

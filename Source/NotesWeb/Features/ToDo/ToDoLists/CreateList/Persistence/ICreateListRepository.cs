@@ -7,5 +7,5 @@ public interface ICreateListRepository
 {
     Task<ToDoList> CreateList(ToDoList list, CancellationToken ct);
 
-    Task<bool> UserExistsAsync(int userId, CancellationToken ct);
+    // Task<bool> UserExistsAsync(int userId, CancellationToken ct);
 }

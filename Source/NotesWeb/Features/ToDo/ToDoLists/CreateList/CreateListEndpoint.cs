@@ -21,11 +21,13 @@ public class CreateListEndpoint(TimeProvider timeProvider, ICreateListRepository
     {
         ToDoList todoList = Map.ToEntity(request);
 
-        bool userExists = await _createListRepository.UserExistsAsync(todoList.UserId, ct);
-        if (!userExists)
-            AddError(r => r.UserId, "this user do not exist is taken!");
 
-        ThrowIfAnyErrors();
+        // this code was for better error messages, but if the user dont exists there are errors elsewere
+        //         bool userExists = await _createListRepository.UserExistsAsync(todoList.UserId, ct);
+        //         if (!userExists)
+        //             AddError(r => r.UserId, "this user do not exist!");
+
+        //         ThrowIfAnyErrors();
 
         todoList.CreatedAtUtc = _timeProvider.GetUtcNow();
         todoList.UpdatedAtUtc = todoList.CreatedAtUtc;
