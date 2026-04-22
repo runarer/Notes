@@ -38,7 +38,6 @@ public class SignUpEndpoint(TimeProvider timeProvider, ISignUpRepository signUpR
 
         await _signUpRepository.SaveUserAsync(user, ct);
 
-        //TODO CreatedAtAsync<Endpoint where user is available>()
         var response = Map.FromEntity(user);
         await Send.CreatedAtAsync("/users/", new { user.Id }, response, cancellation: ct);
     }
