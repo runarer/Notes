@@ -4,7 +4,7 @@ namespace NotesWeb.Entities;
 public class ToDoItem
 {
     public Guid Id { get; }
-    public required string Note { get; set; }
+    public required string Title { get; set; }
     public bool Completed { get; set; }
     public Guid ParentListId { get; set; }
 
