@@ -19,7 +19,6 @@
     <Folder Include="Features\ToDo\ToDoItems\GetList\" />
     <Folder Include="Features\ToDo\ToDoItems\MoveToDoItem\" />
     <Folder Include="Features\ToDo\ToDoItems\UpdateToDoItem\" />
-    <Folder Include="Features\ToDo\ToDoLists\DeleteList\" />
     <Folder Include="Features\ToDo\ToDoLists\GetLists\" />
   </ItemGroup>
 
