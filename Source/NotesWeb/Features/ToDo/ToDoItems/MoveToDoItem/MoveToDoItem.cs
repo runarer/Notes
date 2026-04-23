@@ -11,7 +11,7 @@ public class RenameToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
 
     public override void Configure()
     {
-        Patch("/todo/{listId}/{itemId}");
+        Patch("/todo/{listId}/move/{itemId}");
         Roles("user");
         Claims("UserId");
     }
