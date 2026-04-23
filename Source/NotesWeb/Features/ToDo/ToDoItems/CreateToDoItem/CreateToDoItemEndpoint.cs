@@ -12,7 +12,7 @@ public class CreateToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
 
     public override void Configure()
     {
-        Post("/todo/{listId}");
+        Post("/todo/{listId}/{itemId}");
         Roles("user");
         Claims("UserId");
     }
@@ -20,9 +20,9 @@ public class CreateToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
 
-        bool userExists = await _dbContext.Users.AnyAsync(user => user.Id == request.UserId, ct);
-        if (!userExists)
-            AddError(r => r.UserId, "this user does not exist!");
+        // bool userExists = await _dbContext.Users.AnyAsync(user => user.Id == request.UserId, ct);
+        // if (!userExists)
+        //     AddError(r => r.UserId, "this user does not exist!");
 
         var todoList = await _dbContext.ToDoLists.FindAsync([request.ListId], cancellationToken: ct);
         if (todoList is null)
