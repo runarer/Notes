@@ -4,9 +4,8 @@ using NotesWeb.Data;
 
 namespace NotesWeb.Features.ToDo.ToDoLists.GetLists;
 
-public class GetListEndpoint(TimeProvider timeProvider, NoteBoardDBContext dbContext) : Endpoint<Request, Response, Mapper>
+public class GetListsEndpoint(NoteBoardDBContext dbContext) : Endpoint<Request, Response, Mapper>
 {
-    private readonly TimeProvider _timeProvider = timeProvider;
     private readonly NoteBoardDBContext _dbContext = dbContext;
 
     public override void Configure()

@@ -3,10 +3,8 @@ namespace NotesWeb.Features.ToDo.ToDoLists.GetLists;
 
 public class Request
 {
-    [FromQuery]
+    [FromClaim] public int UserId { get; set; }
     public string? Search { get; set; }
-    [FromClaim]
-    public int UserId { get; set; }
     public DateTimeOffset? FromUtc { get; set; }
     public DateTimeOffset? ToUtc { get; set; }
 }
