@@ -39,6 +39,7 @@ public class CompleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBCont
         todoItem.UpdatedAtUtc = _timeProvider.GetUtcNow();
         todoList!.UpdatedAtUtc = todoItem.UpdatedAtUtc;
 
+        await _dbContext.SaveChangesAsync(ct);
         await Send.OkAsync(cancellation: ct);
 
 
