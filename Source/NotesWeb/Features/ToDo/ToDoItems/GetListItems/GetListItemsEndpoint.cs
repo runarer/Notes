@@ -1,13 +1,11 @@
-using System;
+
 using Microsoft.EntityFrameworkCore;
 using NotesWeb.Data;
 
 namespace NotesWeb.Features.ToDo.ToDoItems.GetListItems;
 
-public class GetListItemsEndpoint(NoteBoardDBContext dbContext) : Endpoint<Request, Response, Mapper>
+public class GetListItemsEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoint<Request, Response, Mapper>(dbContext)
 {
-    private readonly NoteBoardDBContext _dbContext = dbContext;
-
     public override void Configure()
     {
         Get("/todo/{ListId}/items");
@@ -20,19 +18,10 @@ public class GetListItemsEndpoint(NoteBoardDBContext dbContext) : Endpoint<Reque
     {
 
         //Get list, check if it exists and that user owns it
-        var todoList = await _dbContext.ToDoItems.FindAsync([request.ListId], cancellationToken: ct);
-        if (todoList is null)
-        {
-            await Send.NotFoundAsync(ct);
-            return;
-        }
-        if (todoList.UserId != request.UserId)
-        {
-            await Send.ForbiddenAsync(ct);
-            return;
-        }
+        var todoList = await GetList(request.ListId, request, ct);
+        if (todoList is null) return;
 
-        var listQuery = _dbContext.ToDoItems.Where(list => list.ParentListId == request.ListId);
+        var listQuery = Repo.ToDoItems.Where(list => list.ParentListId == request.ListId);
 
         if (!string.IsNullOrWhiteSpace(request.Search))
             listQuery = listQuery.Where(list => list.Title.Contains(request.Search));

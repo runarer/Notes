@@ -28,10 +28,50 @@ public class ItemBaseEndpoint<TReq, TRes, TMapper>(NoteBoardDBContext dbContext)
         return todoList;
     }
 
-    protected async Task<ToDoItem?> GetItem(Guid listId, UserRequest request, CancellationToken ct)
+    protected async Task<ToDoItem?> GetItem(Guid itemId, UserRequest request, CancellationToken ct)
     {
         //Get item, check if it exists and that user owns it
-        var todoItem = await Repo.ToDoItems.FindAsync([listId], cancellationToken: ct);
+        var todoItem = await Repo.ToDoItems.FindAsync([itemId], cancellationToken: ct);
+        if (todoItem is null)
+        {
+            await Send.NotFoundAsync(ct);
+            return null;
+        }
+        else if (todoItem.UserId != request.UserId)
+        {
+            await Send.ForbiddenAsync(ct);
+            return null;
+        }
+        return todoItem;
+    }
+}
+
+public class ItemBaseEndpoint<TReq>(NoteBoardDBContext dbContext) : Endpoint<TReq>
+    where TReq : notnull
+{
+    protected NoteBoardDBContext Repo = dbContext;
+
+    protected async Task<ToDoList?> GetList(Guid listId, UserRequest request, CancellationToken ct)
+    {
+        //Get list, check if it exists and that user owns it
+        var todoList = await Repo.ToDoLists.FindAsync([listId], cancellationToken: ct);
+        if (todoList is null)
+        {
+            await Send.NotFoundAsync(ct);
+            return null;
+        }
+        else if (todoList.UserId != request.UserId)
+        {
+            await Send.ForbiddenAsync(ct);
+            return null;
+        }
+        return todoList;
+    }
+
+    protected async Task<ToDoItem?> GetItem(Guid itemId, UserRequest request, CancellationToken ct)
+    {
+        //Get item, check if it exists and that user owns it
+        var todoItem = await Repo.ToDoItems.FindAsync([itemId], cancellationToken: ct);
         if (todoItem is null)
         {
             await Send.NotFoundAsync(ct);

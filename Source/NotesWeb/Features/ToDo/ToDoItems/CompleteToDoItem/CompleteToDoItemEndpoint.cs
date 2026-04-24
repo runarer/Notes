@@ -1,14 +1,12 @@
-using System;
-using Microsoft.EntityFrameworkCore;
+
 using NotesWeb.Data;
 
 namespace NotesWeb.Features.ToDo.ToDoItems.CompleteToDoItem;
 
-public class CompleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContext dbContext) : Endpoint<Request>
+public class CompleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContext dbContext) : ItemBaseEndpoint<Request>(dbContext)
 {
 
     private readonly TimeProvider _timeProvider = timeProvider;
-    private readonly NoteBoardDBContext _dbContext = dbContext;
 
     public override void Configure()
     {
@@ -18,41 +16,22 @@ public class CompleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBCont
         Claims("UserId");
     }
 
-    // When a list exists but is not owned by the user, it doesn't exist for the user.
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
         //Get list, check if it exists and that user owns it
-        var todoList = await _dbContext.ToDoItems.FindAsync([request.ListId], cancellationToken: ct);
-        if (todoList is null)
-        {
-            await Send.NotFoundAsync(ct);
-            return;
-        }
-        if (todoList.UserId != request.UserId)
-        {
-            await Send.ForbiddenAsync(ct);
-            return;
-        }
+        var todoList = await GetList(request.ListId, request, ct);
+        if (todoList is null) return;
 
         // Get Item, check if it exist and that user owns it
-        var todoItem = await _dbContext.ToDoItems.FindAsync([request.ItemId], cancellationToken: ct);
-        if (todoItem is null)
-        {
-            await Send.NotFoundAsync(ct);
-            return;
-        }
-        if (todoItem.UserId != request.UserId)
-        {
-            await Send.ForbiddenAsync(ct);
-            return;
-        }
+        var todoItem = await GetItem(request.ItemId, request, ct);
+        if (todoItem is null) return;
 
         // All is ok, set item to completed
         todoItem!.Completed = request.Completed ?? true;
         todoItem.UpdatedAtUtc = _timeProvider.GetUtcNow();
         todoList!.UpdatedAtUtc = todoItem.UpdatedAtUtc;
 
-        await _dbContext.SaveChangesAsync(ct);
+        await Repo.SaveChangesAsync(ct);
         await Send.OkAsync(cancellation: ct);
 
 
