@@ -15,8 +15,8 @@
     <Folder Include="Features\ToDo\ToDoItems\CompleteToDoItem\" />
     <Folder Include="Features\ToDo\ToDoItems\CreateToDoItem\" />
     <Folder Include="Features\ToDo\ToDoItems\DeleteToDoItem\" />
-    <Folder Include="Features\ToDo\ToDoItems\GetList\" />
     <Folder Include="Features\ToDo\ToDoItems\MoveToDoItem\" />
+    <Folder Include="Features\ToDo\ToDoLists\GetList\" />
   </ItemGroup>
 
   <ItemGroup>
