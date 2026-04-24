@@ -1,7 +1,7 @@
 
 using NotesWeb.Entities;
 
-namespace NotesWeb.Features.ToDo.ToDoItems.GetList;
+namespace NotesWeb.Features.ToDo.ToDoItems.GetListItems;
 
 public class Mapper : Mapper<Request, ResponseItem, ToDoItem>
 {

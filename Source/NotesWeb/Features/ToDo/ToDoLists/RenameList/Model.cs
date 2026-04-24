@@ -1,12 +1,11 @@
 
 namespace NotesWeb.Features.ToDo.ToDoLists.RenameList;
 
-public class Request
+public class Request : UserRequest
 {
     public required Guid ListId { get; set; }
     public required string Title { get; set; }
-    [FromClaim]
-    public int UserId { get; set; }
+    // [FromClaim] public int UserId { get; set; }
 }
 
 public class Response

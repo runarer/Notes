@@ -1,11 +1,10 @@
 
 namespace NotesWeb.Features.ToDo.ToDoLists.CreateList;
 
-public class Request
+public class Request : UserRequest
 {
     public required string Title { get; set; }
-    [FromClaim]
-    public int UserId { get; set; }
+    // [FromClaim] public int UserId { get; set; }
 }
 
 public class Response

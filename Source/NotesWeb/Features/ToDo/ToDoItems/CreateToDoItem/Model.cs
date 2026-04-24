@@ -1,14 +1,13 @@
 
 namespace NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem;
 
-public class Request
+public class Request : UserRequest
 {
     public Guid ListId { get; set; }
 
     public required string Title { get; set; }
 
-    [FromClaim]
-    public int UserId { get; set; }
+    // [FromClaim] public int UserId { get; set; }
 }
 
 public class Response

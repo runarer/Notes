@@ -2,7 +2,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using NotesWeb.Data;
 
-namespace NotesWeb.Features.ToDo.ToDoItems.GetList;
+namespace NotesWeb.Features.ToDo.ToDoItems.GetListItems;
 
 public class GetListItemsEndpoint(NoteBoardDBContext dbContext) : Endpoint<Request, Response, Mapper>
 {
@@ -11,21 +11,26 @@ public class GetListItemsEndpoint(NoteBoardDBContext dbContext) : Endpoint<Reque
     public override void Configure()
     {
         Get("/todo/{ListId}/items");
+        PreProcessor<UserPreProcessor>();
         Roles("user");
         Claims("UserId");
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
-        // bool userExists = await _dbContext.Users.AnyAsync(user => user.Id == request.UserId, ct);
-        // if (!userExists)
-        //     AddError(r => r.UserId, "this user do not exist!");
 
-        var todoList = await _dbContext.ToDoLists.FindAsync([request.ListId], cancellationToken: ct);
-        if (todoList is null || todoList.UserId != request.UserId)
-            AddError(r => r.ListId, "this list does not exist!");
-
-        ThrowIfAnyErrors();
+        //Get list, check if it exists and that user owns it
+        var todoList = await _dbContext.ToDoItems.FindAsync([request.ListId], cancellationToken: ct);
+        if (todoList is null)
+        {
+            await Send.NotFoundAsync(ct);
+            return;
+        }
+        if (todoList.UserId != request.UserId)
+        {
+            await Send.ForbiddenAsync(ct);
+            return;
+        }
 
         var listQuery = _dbContext.ToDoItems.Where(list => list.ParentListId == request.ListId);
 

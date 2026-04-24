@@ -13,6 +13,7 @@ public class CreateToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
     public override void Configure()
     {
         Post("/todo/{listId}/{itemId}");
+        PreProcessor<UserPreProcessor>();
         Roles("user");
         Claims("UserId");
     }
@@ -20,16 +21,20 @@ public class CreateToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
 
-        // bool userExists = await _dbContext.Users.AnyAsync(user => user.Id == request.UserId, ct);
-        // if (!userExists)
-        //     AddError(r => r.UserId, "this user does not exist!");
-
-        var todoList = await _dbContext.ToDoLists.FindAsync([request.ListId], cancellationToken: ct);
+        //Get list, check if it exists and that user owns it
+        var todoList = await _dbContext.ToDoItems.FindAsync([request.ListId], cancellationToken: ct);
         if (todoList is null)
-            AddError(r => r.ListId, "this list does not exist!");
+        {
+            await Send.NotFoundAsync(ct);
+            return;
+        }
+        if (todoList.UserId != request.UserId)
+        {
+            await Send.ForbiddenAsync(ct);
+            return;
+        }
 
-        ThrowIfAnyErrors();
-
+        // All is ok, create the item
         todoList!.UpdatedAtUtc = _timeProvider.GetUtcNow();
 
         var todoItem = Map.ToEntity(request);

@@ -11,18 +11,13 @@ public class GetListsEndpoint(NoteBoardDBContext dbContext) : Endpoint<Request, 
     public override void Configure()
     {
         Get("/todo");
+        PreProcessor<UserPreProcessor>();
         Roles("user");
         Claims("UserId");
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
-        bool userExists = await _dbContext.Users.AnyAsync(user => user.Id == request.UserId, ct);
-        if (!userExists)
-            AddError(r => r.UserId, "this user do not exist!");
-
-        ThrowIfAnyErrors();
-
         var listQuery = _dbContext.ToDoLists.Where(list => list.UserId == request.UserId);
 
         if (!string.IsNullOrWhiteSpace(request.Search))

@@ -11,29 +11,29 @@ public class RenameListEndpoint(TimeProvider timeProvider, NoteBoardDBContext db
     public override void Configure()
     {
         Patch("/todo/{listId}");
+        PreProcessor<UserPreProcessor>();
         Roles("user");
         Claims("UserId");
+
     }
 
     public async override Task HandleAsync(Request request, CancellationToken ct)
     {
-        bool userExists = await _dbContext.Users.AnyAsync(user => user.Id == request.UserId, ct);
-        if (!userExists)
-            AddError(r => r.UserId, "this user do not exist!");
-
         var list = await _dbContext.ToDoLists.FirstOrDefaultAsync(list => list.Id == request.ListId, ct);
         if (list is null)
-            AddError(r => r.ListId, "this list was not found!");
+        {
+            await Send.NotFoundAsync(ct);
+        }
+        else
+        {
+            list!.Title = request.Title;
+            list.UpdatedAtUtc = _timeProvider.GetUtcNow();
 
-        ThrowIfAnyErrors();
+            await _dbContext.SaveChangesAsync(ct);
 
-        list!.Title = request.Title;
-        list.UpdatedAtUtc = _timeProvider.GetUtcNow();
-
-        await _dbContext.SaveChangesAsync(ct);
-
-        var response = Map.FromEntity(list);
-        await Send.OkAsync(response, ct);
+            var response = Map.FromEntity(list);
+            await Send.OkAsync(response, ct);
+        }
     }
 
 }

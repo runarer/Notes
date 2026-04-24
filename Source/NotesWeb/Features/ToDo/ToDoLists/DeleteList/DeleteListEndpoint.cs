@@ -11,6 +11,7 @@ public class DeleteListEndpoint(NoteBoardDBContext dbContext) : Endpoint<Request
     public override void Configure()
     {
         Delete("/todo/{ListId}");
+        PreProcessor<UserPreProcessor>();
         Roles("user");
         Claims("userId");
     }

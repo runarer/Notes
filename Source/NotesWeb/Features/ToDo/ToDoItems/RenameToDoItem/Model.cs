@@ -2,9 +2,9 @@ using System;
 
 namespace NotesWeb.Features.ToDo.ToDoItems.RenameToDoItem;
 
-public class Request
+public class Request : UserRequest
 {
-    [FromClaim] public int UserId { get; set; }
+    // [FromClaim] public int UserId { get; set; }
     public Guid ItemId { get; set; }
     public Guid ListId { get; set; }
     public required string Title { get; set; }

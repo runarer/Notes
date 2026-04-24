@@ -1,9 +1,9 @@
 
 namespace NotesWeb.Features.ToDo.ToDoLists.GetLists;
 
-public class Request
+public class Request : UserRequest
 {
-    [FromClaim] public int UserId { get; set; }
+    // [FromClaim] public int UserId { get; set; }
     public string? Search { get; set; }
     public DateTimeOffset? FromUtc { get; set; }
     public DateTimeOffset? ToUtc { get; set; }

@@ -12,32 +12,54 @@ public class RenameToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
     public override void Configure()
     {
         Patch("/todo/{listId}/move/{itemId}");
+        PreProcessor<UserPreProcessor>();
         Roles("user");
         Claims("UserId");
     }
 
-    // When a list exists but is not owned by the user, it doesn't exist for the user.
+
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
-
-        // bool userExists = await _dbContext.Users.AnyAsync(user => user.Id == request.UserId, ct);
-        // if (!userExists)
-        //     AddError(r => r.UserId, "this user does not exist!");
-
+        //Get list, check if it exists and that user owns it
         var fromList = await _dbContext.ToDoItems.FindAsync([request.ListId], cancellationToken: ct);
-        if (fromList is null || fromList.UserId != request.UserId)
-            AddError(r => r.ListId, "this list does not exist!");
+        if (fromList is null)
+        {
+            await Send.NotFoundAsync(ct);
+            return;
+        }
+        if (fromList.UserId != request.UserId)
+        {
+            await Send.ForbiddenAsync(ct);
+            return;
+        }
 
+        // Get Item, check if it exist and that user owns it
         var todoItem = await _dbContext.ToDoItems.FindAsync([request.ItemId], cancellationToken: ct);
-        if (todoItem is null || todoItem.UserId != request.UserId)
-            AddError(r => r.ItemId, "this item does not exist!");
+        if (todoItem is null)
+        {
+            await Send.NotFoundAsync(ct);
+            return;
+        }
+        if (todoItem.UserId != request.UserId)
+        {
+            await Send.ForbiddenAsync(ct);
+            return;
+        }
 
+        // Get toList, check if it exist and that user owns it
         var toList = await _dbContext.ToDoItems.FindAsync([request.ToList], cancellationToken: ct);
-        if (toList is null || toList.UserId != request.UserId)
-            AddError(r => r.ItemId, "this item does not exist!");
+        if (toList is null)
+        {
+            await Send.NotFoundAsync(ct);
+            return;
+        }
+        if (toList.UserId != request.UserId)
+        {
+            await Send.ForbiddenAsync(ct);
+            return;
+        }
 
-        ThrowIfAnyErrors();
-
+        // All is Ok, make the move
         todoItem!.ParentListId = toList!.Id;
         todoItem.UpdatedAtUtc = _timeProvider.GetUtcNow();
         fromList!.UpdatedAtUtc = todoItem.UpdatedAtUtc;

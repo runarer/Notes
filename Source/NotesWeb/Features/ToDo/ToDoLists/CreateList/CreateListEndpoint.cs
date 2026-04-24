@@ -1,6 +1,4 @@
 
-
-using Microsoft.EntityFrameworkCore;
 using NotesWeb.Data;
 using NotesWeb.Entities;
 
@@ -15,6 +13,7 @@ public class CreateListEndpoint(TimeProvider timeProvider, NoteBoardDBContext db
     public override void Configure()
     {
         Post("/todo");
+        PreProcessor<UserPreProcessor>();
         Roles("user");
         Claims("UserId");
     }
@@ -22,12 +21,6 @@ public class CreateListEndpoint(TimeProvider timeProvider, NoteBoardDBContext db
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
         ToDoList todoList = Map.ToEntity(request);
-
-        bool userExists = await _dbContext.Users.AnyAsync(user => user.Id == request.UserId, ct);
-        if (!userExists)
-            AddError(r => r.UserId, "this user do not exist!");
-
-        ThrowIfAnyErrors();
 
         todoList.CreatedAtUtc = _timeProvider.GetUtcNow();
         todoList.UpdatedAtUtc = todoList.CreatedAtUtc;
