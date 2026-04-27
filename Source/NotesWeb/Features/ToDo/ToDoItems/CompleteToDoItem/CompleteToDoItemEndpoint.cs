@@ -12,7 +12,7 @@ public class CompleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBCont
     {
         Patch("/todo/{listId}/{itemId}/complete");
         PreProcessor<UserPreProcessor>();
-        Roles("user");
+        Roles("User");
         Claims("UserId");
     }
 

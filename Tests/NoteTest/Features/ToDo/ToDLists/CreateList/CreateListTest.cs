@@ -13,6 +13,11 @@ public sealed class LoginState : StateFixture
 public class UserLoginTests(App App, LoginState State) : TestBase<App, LoginState>, IAsyncLifetime
 {
 
+    private readonly Request _validRequest = new()
+    {
+        Title = "A testing list"
+    };
+
     /// <summary>
     /// This sign up user to the server if it is not signed up.
     /// </summary>
@@ -60,5 +65,9 @@ public class UserLoginTests(App App, LoginState State) : TestBase<App, LoginStat
         // SignUp user
         await SetTokenAsync();
 
+        var (rsp, res) = await App.Client.POSTAsync<CreateListEndpoint, Request, ProblemDetails>(_validRequest);
+
+        Assert.Equal(HttpStatusCode.Created, rsp.StatusCode);
+        Assert.NotNull(res);
     }
 }

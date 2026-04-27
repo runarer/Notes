@@ -13,9 +13,9 @@ public class CreateListEndpoint(TimeProvider timeProvider, NoteBoardDBContext db
     public override void Configure()
     {
         Post("/todo");
-        PreProcessor<UserPreProcessor>();
-        Roles("user");
+        Roles("User");
         Claims("UserId");
+        PreProcessor<UserPreProcessor>();
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)

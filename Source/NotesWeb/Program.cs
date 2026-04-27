@@ -11,6 +11,9 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Microsoft.AspNetCore.HttpLogging;
 using OpenTelemetry.Metrics;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,9 +46,31 @@ builder.Services.AddDbContext<NoteBoardDBContext>(
 builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 
 builder.Services.AddSingleton(TimeProvider.System);
+// builder.Services
+//    .AddAuthentication(
+//        o =>
+//        {
+//            o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//            o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//        })
+//    .AddJwtBearer(
+//        o =>
+//        {
+//            o.TokenValidationParameters = new()
+//            {
+//                ValidateAudience = false,
+//                ValidateIssuer = false,
+//                ValidateLifetime = true,
+//                ValidateIssuerSigningKey = true,
+//                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Auth:JwtSecretKey"]!))
+//            };
+//        });
+// builder.Services.AddAuthorization();
 builder.Services.AddAuthenticationJwtBearer(s => s.SigningKey = jwtkey);
-builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("Users", x => x.RequireRole("User").RequireClaim("UserId")); // This might not be needed
+builder.Services.AddAuthentication(o => o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme);
+// builder.Services.AddAuthorizationBuilder();
+builder.Services.AddAuthorization();
+// .AddPolicy("Users", x => x.RequireRole("User").RequireClaim("UserId")); // This might not be needed
 builder.Services.AddFastEndpoints();
 
 builder.Services.SwaggerDocument();

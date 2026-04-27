@@ -10,7 +10,7 @@ public class GetListItemsEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoi
     {
         Get("/todo/{ListId}/items");
         PreProcessor<UserPreProcessor>();
-        Roles("user");
+        Roles("User");
         Claims("UserId");
     }
 

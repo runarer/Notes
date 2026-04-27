@@ -12,7 +12,7 @@ public class GetListsEndpoint(NoteBoardDBContext dbContext) : Endpoint<Request, 
     {
         Get("/todo");
         PreProcessor<UserPreProcessor>();
-        Roles("user");
+        Roles("User");
         Claims("UserId");
     }
 

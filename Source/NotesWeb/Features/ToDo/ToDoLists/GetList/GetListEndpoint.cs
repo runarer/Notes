@@ -11,7 +11,7 @@ public class GetListEndpoint(NoteBoardDBContext dbContext) : Endpoint<Request, R
     {
         Get("/todo/{listId}");
         PreProcessor<UserPreProcessor>();
-        Roles("user");
+        Roles("User");
         Claims("UserId");
     }
 

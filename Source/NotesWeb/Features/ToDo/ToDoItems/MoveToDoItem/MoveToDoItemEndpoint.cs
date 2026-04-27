@@ -10,9 +10,9 @@ public class RenameToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
 
     public override void Configure()
     {
-        Patch("/todo/{listId}/move/{itemId}");
+        Patch("/todo/{listId}/{itemId}/move");
         PreProcessor<UserPreProcessor>();
-        Roles("user");
+        Roles("User");
         Claims("UserId");
     }
 

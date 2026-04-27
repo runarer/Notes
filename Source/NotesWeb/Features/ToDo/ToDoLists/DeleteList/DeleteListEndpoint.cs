@@ -12,7 +12,7 @@ public class DeleteListEndpoint(NoteBoardDBContext dbContext) : Endpoint<Request
     {
         Delete("/todo/{ListId}");
         PreProcessor<UserPreProcessor>();
-        Roles("user");
+        Roles("User");
         Claims("userId");
     }
 

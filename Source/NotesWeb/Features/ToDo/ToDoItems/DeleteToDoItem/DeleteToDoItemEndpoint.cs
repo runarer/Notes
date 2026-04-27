@@ -13,7 +13,7 @@ public class DeleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
     {
         Delete("/todo/{listId}/{itemId}");
         PreProcessor<UserPreProcessor>();
-        Roles("user");
+        Roles("User");
         Claims("UserId");
     }
 

@@ -12,7 +12,7 @@ public class RenameListEndpoint(TimeProvider timeProvider, NoteBoardDBContext db
     {
         Patch("/todo/{listId}");
         PreProcessor<UserPreProcessor>();
-        Roles("user");
+        Roles("User");
         Claims("UserId");
 
     }
