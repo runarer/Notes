@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Time.Testing;
 using NotesWeb.Data;
 using Testcontainers.PostgreSql;
 
@@ -9,6 +10,7 @@ namespace NoteTest;
 public class App : AppFixture<Program>, IAsyncLifetime
 {
     private PostgreSqlContainer? _postgreSqlContainer;
+    public TimeProvider FakeTime = new FakeTimeProvider();
 
     protected override void ConfigureServices(IServiceCollection services)
     {
@@ -23,6 +25,15 @@ public class App : AppFixture<Program>, IAsyncLifetime
         {
             options.UseNpgsql(_postgreSqlContainer!.GetConnectionString());
         });
+
+        var timeProvider = services.SingleOrDefault(s => s.ServiceType == typeof(TimeProvider));
+
+        if (timeProvider is not null)
+        {
+            services.Remove(timeProvider);
+        }
+
+        services.AddSingleton(FakeTime);
     }
 
 
