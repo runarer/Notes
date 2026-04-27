@@ -7,6 +7,7 @@ using Testcontainers.PostgreSql;
 
 namespace NoteTest;
 
+[DisableWafCache]
 public class App : AppFixture<Program>, IAsyncLifetime
 {
     private PostgreSqlContainer? _postgreSqlContainer;
