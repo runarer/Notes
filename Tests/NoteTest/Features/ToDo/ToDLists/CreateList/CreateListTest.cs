@@ -3,71 +3,100 @@ using NotesWeb.Features.ToDo.ToDoLists.CreateList;
 
 namespace NoteTest.Features.ToDo.ToDLists.CreateList;
 
-
-
-public sealed class LoginState : StateFixture
+public class CreateListTests(App App, LoginState State) : LoggedinTests(App, State)
 {
-    public bool Token = false;
-}
-
-public class UserLoginTests(App App, LoginState State) : TestBase<App, LoginState>, IAsyncLifetime
-{
-
     private readonly Request _validRequest = new()
     {
         Title = "A testing list"
     };
-
-    /// <summary>
-    /// This sign up user to the server if it is not signed up.
-    /// </summary>
-    /// <returns></returns>
-    private async Task SetTokenAsync()
-    {
-        NotesWeb.Features.Users.SignUp.Request user = new()
-        {
-            Username = "TestUser2",
-            FullName = "Test Userson",
-            Password = "Testing123",
-            Email = "test2@example.com",
-        };
-
-        if (!State.Token)
-        {
-            var (rsp1, re) = await App.Client.POSTAsync<
-                NotesWeb.Features.Users.SignUp.SignUpEndpoint,
-                NotesWeb.Features.Users.SignUp.Request,
-                NotesWeb.Features.Users.SignUp.Response>(user);
-
-            // Make sure success
-            Assert.Equal(HttpStatusCode.Created, rsp1.StatusCode);
-
-            var (rsp2, res) = await App.Client.POSTAsync<
-                NotesWeb.Features.Users.Login.UserLoginEndpoint,
-                NotesWeb.Features.Users.Login.Request,
-                NotesWeb.Features.Users.Login.Response>(
-                    new NotesWeb.Features.Users.Login.Request { Email = user.Email, Password = user.Password });
-
-            // Assert Ok
-            Assert.Equal(HttpStatusCode.OK, rsp2.StatusCode);
-            // Assert JWT
-            Assert.NotNull(res);
-
-            App.Client.DefaultRequestHeaders.Authorization = new("Bearer", res.Token);
-
-            State.Token = true;
-        }
-    }
 
     [Fact]
     public async Task CreateList_WithValidInput_ListCreated()
     {
         // SignUp user
         await SetTokenAsync();
+        var fakeTime = App.FakeTime.GetUtcNow();
 
-        var (rsp, res) = await App.Client.POSTAsync<CreateListEndpoint, Request, ProblemDetails>(_validRequest);
+        var (rsp, res) = await App.Client.POSTAsync<CreateListEndpoint, Request, Response>(_validRequest);
 
         Assert.Equal(HttpStatusCode.Created, rsp.StatusCode);
         Assert.NotNull(res);
+
+        Assert.Equal(_validRequest.Title, res.Title);
+        Assert.NotEqual(default, res.Id);
+        Assert.Equal(fakeTime, res.CreatedAtUtc);
+        Assert.Equal(res.CreatedAtUtc, res.UpdatedAtUtc);
+    }
+
+    [Fact]
+    public async Task CreateList_TitleToShort_GEtPRoblemDetailsWithErrorMessage()
+    {
+        await SetTokenAsync();
+
+        var invalidRequest = _validRequest;
+        invalidRequest.Title = "t";
+
+        var expected = new[] {
+            ("title", "Title is to short")};
+
+
+
+        var (rsp, res) = await App.Client.POSTAsync<CreateListEndpoint, Request, ProblemDetails>(invalidRequest);
+
+
+
+        Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
+        Assert.NotNull(res);
+
+        Assert.Single(res.Errors);
+        Assert.Equivalent(expected, res.Errors.Select(e => (e.Name, e.Reason)));
+    }
+
+    [Fact]
+    public async Task CreateList_TitleToLong_GEtPRoblemDetailsWithErrorMessage()
+    {
+        await SetTokenAsync();
+
+        var invalidRequest = _validRequest;
+        invalidRequest.Title = "A way to long title...................................................................................";
+
+        var expected = new[] {
+            ("title", "Title is to long")};
+
+
+
+        var (rsp, res) = await App.Client.POSTAsync<CreateListEndpoint, Request, ProblemDetails>(invalidRequest);
+
+
+
+        Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
+        Assert.NotNull(res);
+
+        Assert.Single(res.Errors);
+        Assert.Equivalent(expected, res.Errors.Select(e => (e.Name, e.Reason)));
+    }
+
+    [Fact]
+    public async Task CreateList_NoTitleProvided_GEtPRoblemDetailsWithErrorMessage()
+    {
+        await SetTokenAsync();
+
+        var invalidRequest = _validRequest;
+        invalidRequest.Title = "";
+
+        var expected = new[] {
+            ("title", "You need to provide a title")};
+
+
+
+        var (rsp, res) = await App.Client.POSTAsync<CreateListEndpoint, Request, ProblemDetails>(invalidRequest);
+
+
+
+        Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
+        Assert.NotNull(res);
+
+        Assert.Single(res.Errors);
+        Assert.Equivalent(expected, res.Errors.Select(e => (e.Name, e.Reason)));
     }
 }
