@@ -24,27 +24,17 @@ public class Response
 
 public class Validator : Validator<Request>
 {
-    public Validator(/*TimeProvider timeProvider*/)
+    public Validator(TimeProvider timeProvider)
     {
 
-        // RuleFor(x => x.ToUtc)
-        //     .GreaterThanOrEqualTo(x => x.FromUtc)
-        //     .When(x => x.ToUtc.HasValue && x.FromUtc.HasValue)
-        //     .WithMessage("'{PropertyName}' must be after '{ComparisonProperty}'.");
-
         RuleFor(x => x.FromUtc)
-            // .LessThan(timeProvider.GetUtcNow())
-            .LessThan(DateTimeOffset.UtcNow)
+            .LessThan(timeProvider.GetUtcNow())
             .When(x => x.FromUtc.HasValue) // Is this needed here 
-            .WithMessage("Date 'from' must be in the past!")
+            .WithMessage("Date '{PropertyName}' must be in the past!");
+        RuleFor(x => x.FromUtc)
             .LessThan(x => x.ToUtc)
             .When(x => x.ToUtc.HasValue && x.FromUtc.HasValue)
             .WithMessage("'{PropertyName}' must be after '{ComparisonProperty}'.");
-
-        // RuleFor(x => x.FromUtc).NotNull().DependentRules(() =>
-        // {
-        //     RuleFor(x => x.FromUtc)
-        // });
 
     }
 }
