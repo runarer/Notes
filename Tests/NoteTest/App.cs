@@ -11,7 +11,7 @@ namespace NoteTest;
 public class App : AppFixture<Program>, IAsyncLifetime
 {
     private PostgreSqlContainer? _postgreSqlContainer;
-    public TimeProvider FakeTime = new FakeTimeProvider();
+    public FakeTimeProvider FakeTime = new();
 
     protected override void ConfigureServices(IServiceCollection services)
     {
@@ -34,7 +34,7 @@ public class App : AppFixture<Program>, IAsyncLifetime
             services.Remove(timeProvider);
         }
 
-        services.AddSingleton(FakeTime);
+        services.AddSingleton<TimeProvider>(FakeTime);
     }
 
 
