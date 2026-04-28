@@ -77,7 +77,7 @@ public class CreateListTests(App App, LoginState State) : LoggedinTests(App, Sta
     }
 
     [Fact]
-    public async Task CreateList_NoTitleProvided_GEtPRoblemDetailsWithErrorMessage()
+    public async Task CreateList_NoTitleProvided_GetPRoblemDetailsWithErrorMessage()
     {
         await SetTokenAsync();
 
