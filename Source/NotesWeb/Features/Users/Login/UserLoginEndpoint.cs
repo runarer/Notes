@@ -49,7 +49,7 @@ public class UserLoginEndpoint(NoteBoardDBContext dbContext, IPasswordHasher<Use
         var jwtToken = JwtBearer.CreateToken(o =>
         {
             o.SigningKey = jwtSecret; // get this secret from an external place
-            o.ExpireAt = DateTime.UtcNow.AddMinutes(30);
+            o.ExpireAt = DateTime.UtcNow.AddDays(30);
             o.User.Roles.Add("User");
             o.User.Claims.Add(("UserId", user.Id.ToString()));
         });
