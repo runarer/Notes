@@ -11,7 +11,7 @@ namespace NoteTest;
 public class App : AppFixture<Program>, IAsyncLifetime
 {
     private PostgreSqlContainer? _postgreSqlContainer;
-    public FakeTimeProvider FakeTime = new();
+    public FakeTimeProvider FakeTime = new(DateTimeOffset.UtcNow);
 
     protected override void ConfigureServices(IServiceCollection services)
     {
