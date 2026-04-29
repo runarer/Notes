@@ -9,6 +9,8 @@ public class Mapper : Mapper<Request, Response, ToDoItem>
     public override ToDoItem ToEntity(Request r) => new()
     {
         Title = r.Title,
+        UserId = r.UserId,
+        ParentListId = r.ListId
     };
     public override Response FromEntity(ToDoItem e) => new()
     {

@@ -5,7 +5,7 @@ public class Request : UserRequest
 {
     public Guid ListId { get; set; }
 
-    public required string Title { get; set; }
+    public string Title { get; set; } = null!;
 
     // [FromClaim] public int UserId { get; set; }
 }
@@ -13,7 +13,7 @@ public class Request : UserRequest
 public class Response
 {
     public Guid Id { get; set; }
-    public required string Title { get; set; }
+    public string Title { get; set; } = null!;
     public bool Completed { get; set; }
     public Guid ParentListId { get; set; }
     public DateTimeOffset CreatedAtUtc { get; set; }
