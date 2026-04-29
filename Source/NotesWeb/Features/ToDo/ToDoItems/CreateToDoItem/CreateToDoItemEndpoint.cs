@@ -24,11 +24,9 @@ public class CreateToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
         if (todoList is null) return;
 
         // All is ok, create the item
-        todoList!.UpdatedAtUtc = _timeProvider.GetUtcNow();
-
         var todoItem = Map.ToEntity(request);
         todoItem.CreatedAtUtc = _timeProvider.GetUtcNow();
-        todoItem.UpdatedAtUtc = todoList.CreatedAtUtc;
+        todoItem.UpdatedAtUtc = todoItem.CreatedAtUtc;
         todoList.UpdatedAtUtc = todoItem.CreatedAtUtc;
 
         await Repo.ToDoItems.AddAsync(todoItem, ct);
