@@ -11,6 +11,7 @@ public class CompleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBCont
     public override void Configure()
     {
         Patch("/todo/{ListId}/{ItemId}/complete");
+        Description(x => x.Accepts<Request>());
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
@@ -27,9 +28,9 @@ public class CompleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBCont
         if (todoItem is null) return;
 
         // All is ok, set item to completed
-        todoItem!.Completed = request.Completed ?? true;
+        todoItem.Completed = request.Query?.Completed ?? true;
         todoItem.UpdatedAtUtc = _timeProvider.GetUtcNow();
-        todoList!.UpdatedAtUtc = todoItem.UpdatedAtUtc;
+        todoList.UpdatedAtUtc = todoItem.UpdatedAtUtc;
 
         await Repo.SaveChangesAsync(ct);
         await Send.OkAsync(cancellation: ct);
