@@ -11,6 +11,7 @@ public class RenameToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
     public override void Configure()
     {
         Patch("/todo/{ListId}/{ItemId}/move");
+        Description(x => x.Accepts<Request>());
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
@@ -28,7 +29,7 @@ public class RenameToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
         if (todoItem is null) return;
 
         // Get toList, check if it exist and that user owns it
-        var toList = await GetList(request.ToList, request, ct);
+        var toList = await GetList(request.Query!.ToList, request, ct);
         if (toList is null) return;
 
         // All is Ok, make the move
