@@ -10,7 +10,7 @@ public class CompleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBCont
 
     public override void Configure()
     {
-        Patch("/todo/{listId}/{itemId}/complete");
+        Patch("/todo/{ListId}/{ItemId}/complete");
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");

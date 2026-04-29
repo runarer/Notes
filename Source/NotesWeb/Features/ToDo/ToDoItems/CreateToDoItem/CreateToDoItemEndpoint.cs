@@ -11,7 +11,7 @@ public class CreateToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
 
     public override void Configure()
     {
-        Post("/todo/{listId}");
+        Post("/todo/{ListId}");
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");

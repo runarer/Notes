@@ -3,9 +3,8 @@ namespace NotesWeb.Features.ToDo.ToDoLists.RenameList;
 
 public class Request : UserRequest
 {
-    public required Guid ListId { get; set; }
-    public required string Title { get; set; }
-    // [FromClaim] public int UserId { get; set; }
+    public Guid ListId { get; set; }
+    public string Title { get; set; } = null!;
 }
 
 public class Response

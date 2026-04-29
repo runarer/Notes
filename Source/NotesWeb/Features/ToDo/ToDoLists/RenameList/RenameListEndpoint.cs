@@ -10,7 +10,7 @@ public class RenameListEndpoint(TimeProvider timeProvider, NoteBoardDBContext db
     private readonly TimeProvider _timeProvider = timeProvider;
     public override void Configure()
     {
-        Patch("/todo/{listId}");
+        Patch("/todo/{ListId}");
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");

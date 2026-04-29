@@ -9,7 +9,7 @@ public class GetListEndpoint(NoteBoardDBContext dbContext) : Endpoint<Request, R
 
     public override void Configure()
     {
-        Get("/todo/{listId}");
+        Get("/todo/{ListId}");
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
