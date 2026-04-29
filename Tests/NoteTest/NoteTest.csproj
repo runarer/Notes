@@ -29,8 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\ToDo\" />
-    <Folder Include="Features\ToDo\ToDLists\" />
     <Folder Include="Features\ToDo\ToDLists\CreateList\" />
     <Folder Include="Features\ToDo\ToDLists\DeleteList\" />
     <Folder Include="Features\ToDo\ToDLists\GetLists\" />
