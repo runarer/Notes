@@ -7,14 +7,14 @@ public class Request : UserRequest
     // [FromClaim] public int UserId { get; set; }
     public Guid ItemId { get; set; }
     public Guid ListId { get; set; }
-    public required string Title { get; set; }
+    public string Title { get; set; } = null!;
 
 }
 
 public class Response
 {
     public Guid Id { get; set; }
-    public required string Title { get; set; }
+    public string Title { get; set; } = null!;
     public bool Completed { get; set; }
     public Guid ParentListId { get; set; }
     public DateTimeOffset CreatedAtUtc { get; set; }

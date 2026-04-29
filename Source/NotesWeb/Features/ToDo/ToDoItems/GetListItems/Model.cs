@@ -3,8 +3,7 @@ namespace NotesWeb.Features.ToDo.ToDoItems.GetListItems;
 
 public class Request : UserRequest
 {
-    // [FromClaim] public int UserId { get; set; }
-    [FromQuery] public Guid ListId { get; set; }
+    public Guid ListId { get; set; }
     public string? Search { get; set; }
     public bool? Completed { get; set; }
     public DateTimeOffset? FromUtc { get; set; }
@@ -14,7 +13,7 @@ public class Request : UserRequest
 public class ResponseItem
 {
     public Guid Id { get; set; }
-    public required string Title { get; set; }
+    public string Title { get; set; } = null!;
     public bool Completed { get; set; }
     public Guid ParentListId { get; set; }
     public DateTimeOffset CreatedAtUtc { get; set; }
