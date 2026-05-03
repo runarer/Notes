@@ -37,7 +37,7 @@ public class CreateToDoItemTests(App App, LoginState State) : LoggedinTests(App,
     }
 
     [Fact]
-    public async Task CreateItem_TitleToShort_GetPRoblemDetailsWithErrorMessage()
+    public async Task CreateItem_TitleToShort_GetProblemDetailsWithErrorMessage()
     {
         await SetTokenAsync();
 
@@ -62,7 +62,7 @@ public class CreateToDoItemTests(App App, LoginState State) : LoggedinTests(App,
     }
 
     [Fact]
-    public async Task CreateItem_TitleToLong_GetPRoblemDetailsWithErrorMessage()
+    public async Task CreateItem_TitleToLong_GetProblemDetailsWithErrorMessage()
     {
         await SetTokenAsync();
 
@@ -87,7 +87,7 @@ public class CreateToDoItemTests(App App, LoginState State) : LoggedinTests(App,
     }
 
     [Fact]
-    public async Task CreateItem_NoTitleProvided_GetPRoblemDetailsWithErrorMessage()
+    public async Task CreateItem_NoTitleProvided_GetProblemDetailsWithErrorMessage()
     {
         await SetTokenAsync();
 
