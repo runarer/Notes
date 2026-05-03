@@ -1,8 +1,9 @@
 
 namespace NotesWeb.Features.ToDo.ToDoItems;
 
-public class ItemRequest
+// Todo: refactor ToDoItem endpoints to use this class, after tests are written.
+
+public class ItemRequest : UserRequest
 {
-    [FromClaim] public int UserId { get; set; }
     public Guid ListId { get; set; }
 }
