@@ -33,7 +33,6 @@
     <Folder Include="Features\ToDo\ToDLists\DeleteList\" />
     <Folder Include="Features\ToDo\ToDLists\GetLists\" />
     <Folder Include="Features\ToDo\ToDLists\RenameList\" />
-    <Folder Include="Features\ToDo\ToDoItems\" />
     <Folder Include="Features\ToDo\ToDoItems\CompleteToDoItem\" />
     <Folder Include="Features\ToDo\ToDoItems\CreateToDoItem\" />
     <Folder Include="Features\ToDo\ToDoItems\DeleteToDoItem\" />
