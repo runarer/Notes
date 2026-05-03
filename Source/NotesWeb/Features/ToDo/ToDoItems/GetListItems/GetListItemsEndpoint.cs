@@ -8,7 +8,7 @@ public class GetListItemsEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoi
 {
     public override void Configure()
     {
-        Get("/todo/{ListId}/items");
+        Get("/todo/{ListId}/items"); //Todo: rename endpint to /todo/{ListId}/list, need to update tests?
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
