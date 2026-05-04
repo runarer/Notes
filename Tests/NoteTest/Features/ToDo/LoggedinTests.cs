@@ -77,4 +77,21 @@ public class LoggedinTests(App app, LoginState state) : TestBase<App, LoginState
 
         return res.Id;
     }
+
+    protected async Task<Guid> CreateAnItemAsync(Guid listId, string title)
+    {
+        var (rsp, res) = await App.Client.POSTAsync<
+            NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.CreateToDoItemEndpoint,
+            NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request,
+            NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Response>(
+                new NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request
+                {
+                    ListId = listId,
+                    Title = title
+                });
+        Assert.Equal(HttpStatusCode.Created, rsp.StatusCode);
+        Assert.NotNull(res);
+
+        return res.Id;
+    }
 }
