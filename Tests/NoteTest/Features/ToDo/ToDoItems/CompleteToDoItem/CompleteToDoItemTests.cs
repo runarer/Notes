@@ -24,7 +24,7 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         // Complete item
         var rspComplete = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
         {
-            ListId = listId,
+            // ListId = listId,
             ItemId = itemId
         });
 
@@ -37,7 +37,7 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         NotesWeb.Features.ToDo.ToDoItems.GetItem.Response>(
             new NotesWeb.Features.ToDo.ToDoItems.GetItem.Request
             {
-                ListId = listId,
+                // ListId = listId,
                 ItemId = itemId
             });
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
@@ -66,7 +66,7 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         // Complete item -> other tests assert item is set to completed
         var rspComplete = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
         {
-            ListId = listId,
+            // ListId = listId,
             ItemId = itemId
         });
         Assert.Equal(HttpStatusCode.OK, rspComplete.StatusCode);
@@ -79,7 +79,7 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
 
         var rspUncomplete = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
         {
-            ListId = listId,
+            // ListId = listId,
             ItemId = itemId,
             Completed = false
         });
@@ -95,7 +95,7 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         NotesWeb.Features.ToDo.ToDoItems.GetItem.Response>(
             new NotesWeb.Features.ToDo.ToDoItems.GetItem.Request
             {
-                ListId = listId,
+                // ListId = listId,
                 ItemId = itemId
             });
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
@@ -129,7 +129,7 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
 
         var rspCompleted = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
         {
-            ListId = listId,
+            // ListId = listId,
             ItemId = itemId,
             Completed = true
         });
@@ -145,7 +145,7 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         NotesWeb.Features.ToDo.ToDoItems.GetItem.Response>(
             new NotesWeb.Features.ToDo.ToDoItems.GetItem.Request
             {
-                ListId = listId,
+                // ListId = listId,
                 ItemId = itemId
             });
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
@@ -169,7 +169,7 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         // Complete a non-existing item in the list
         var rsp = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
         {
-            ListId = listId,
+            // ListId = listId,
             ItemId = Guid.NewGuid()
         });
 
@@ -178,21 +178,21 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         Assert.Equal(HttpStatusCode.NotFound, rsp.StatusCode);
     }
 
-    [Fact]
-    public async Task CompleteToDoItem_ListDoesNotExist_ReturnsNotFound()
-    {
-        await SetTokenAsync();
+    // [Fact]
+    // public async Task CompleteToDoItem_ListDoesNotExist_ReturnsNotFound()
+    // {
+    //     await SetTokenAsync();
 
 
-        // Complete an item in a non-existing list
-        var rsp = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
-        {
-            ListId = Guid.NewGuid(),
-            ItemId = Guid.NewGuid()
-        });
+    //     // Complete an item in a non-existing list
+    //     var rsp = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
+    //     {
+    //         // ListId = Guid.NewGuid(),
+    //         ItemId = Guid.NewGuid()
+    //     });
 
 
-        // Assert 404
-        Assert.Equal(HttpStatusCode.NotFound, rsp.StatusCode);
-    }
+    //     // Assert 404
+    //     Assert.Equal(HttpStatusCode.NotFound, rsp.StatusCode);
+    // }
 }

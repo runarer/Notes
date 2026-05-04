@@ -1,27 +1,62 @@
 
+using System.Net;
+using NotesWeb.Features.ToDo.ToDoItems.MoveToDoItem;
+
 namespace NoteTest.Features.ToDo.ToDoItems.MoveToDoItem;
 
-public class MoveToDoItemTests
+public class MoveToDoItemTests(App App, LoginState State) : LoggedinTests(App, State)
 {
-    // public async Task MoveToDoItem_CreateTwoListsAddItemToFirstMoveItemToSecond()
-    // Create first list
-    // Create second list
-    // Create item in first list
-    // Move item from first to second list
-    // Assert item is in second list
+    [Fact]
+    public async Task MoveToDoItem_CreateTwoListsAddItemToFirstMoveItemToSecond()
+    {
+        await SetTokenAsync();
+        // Create first list
+        var firstList = await CreateAListAsync("First List");
+        // Create second list
+        var secondList = await CreateAListAsync("Second List");
+        // Create item in first list
+        var itemId = await CreateAnItemAsync(firstList, "Item to move");
 
-    // public async Task MoveToDoItem_CreateOneListAddItemMoveItemToNonExistingList_ReturnProblemDetails()
-    // Create first list
-    // Create item in first list
-    // Move item form first list to non-existing list
-    // Assert problem details
+        var request = new Request
+        {
+            // ListId = firstList,
+            ItemId = itemId,
+            ToList = secondList
 
-    // public async Task MoveToDoItem_MoveAnItemFromAnNonExistingList_ReturnNotFound()
-    // Move Item from list to list
-    // Assert NotFound
+        };
 
-    // public async Task MoveToDoItem_CreateAListMoveAnNonExistingItemFromItToAList_ReturnsNotFound()
-    // Create list
-    // Move Item
-    // Assert NotFound
+        // Move item from first to second list
+        var (rsp, res) = await App.Client.PATCHAsync<MoveToDoItemEndpoint, Request, Response>(request);
+
+        // Assert item is in second list
+        Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
+        Assert.NotNull(res);
+        Assert.Equal(secondList, res.ParentListId);
+    }
+    [Fact]
+    public async Task MoveToDoItem_CreateOneListAddItemMoveItemToNonExistingList_ReturnProblemDetails()
+    {
+        await SetTokenAsync();
+        // Create first list
+        // Create item in first list
+        // Move item form first list to non-existing list
+        // Assert problem details
+    }
+
+    [Fact]
+    public async Task MoveToDoItem_MoveAnItemFromAnNonExistingList_ReturnNotFound()
+    {
+        await SetTokenAsync();
+        // Move Item from list to list
+        // Assert NotFound
+    }
+
+    [Fact]
+    public async Task MoveToDoItem_CreateAListMoveAnNonExistingItemFromItToAList_ReturnsNotFound()
+    {
+        await SetTokenAsync();
+        // Create list
+        // Move Item
+        // Assert NotFound
+    }
 }

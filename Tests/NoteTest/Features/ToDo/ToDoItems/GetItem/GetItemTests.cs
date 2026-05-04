@@ -31,7 +31,7 @@ public class GetItemTests(App App, LoginState State) : LoggedinTests(App, State)
         var (rsp, res) = await App.Client.GETAsync<GetItemEndpoint, Request, Response>(
             new Request
             {
-                ListId = listId,
+                // ListId = listId,
                 ItemId = resPost.Id
             });
 
@@ -57,7 +57,7 @@ public class GetItemTests(App App, LoginState State) : LoggedinTests(App, State)
         var (rsp, res) = await App.Client.GETAsync<GetItemEndpoint, Request, Response>(
             new Request
             {
-                ListId = listId,
+                // ListId = listId,
                 ItemId = Guid.NewGuid()
             });
 
@@ -78,7 +78,7 @@ public class GetItemTests(App App, LoginState State) : LoggedinTests(App, State)
         var (rsp, res) = await App.Client.GETAsync<GetItemEndpoint, Request, Response>(
             new Request
             {
-                ListId = Guid.NewGuid(),
+                // ListId = Guid.NewGuid(),
                 ItemId = Guid.NewGuid()
             });
 
