@@ -28,7 +28,8 @@ public class CompleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBCont
         if (todoItem is null) return;
 
         // All is ok, set item to completed
-        todoItem.Completed = request.Query?.Completed ?? true;
+        // todoItem.Completed = request.Query?.Completed ?? true;
+        todoItem.Completed = request.Completed ?? true;
         todoItem.UpdatedAtUtc = _timeProvider.GetUtcNow();
         todoList.UpdatedAtUtc = todoItem.UpdatedAtUtc;
 
