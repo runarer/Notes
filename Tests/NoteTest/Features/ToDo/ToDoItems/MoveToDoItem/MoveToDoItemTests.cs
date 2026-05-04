@@ -19,7 +19,6 @@ public class MoveToDoItemTests(App App, LoginState State) : LoggedinTests(App, S
 
         var request = new Request
         {
-            // ListId = firstList,
             ItemId = itemId,
             ToList = secondList
 

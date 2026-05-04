@@ -24,7 +24,6 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         // Complete item
         var rspComplete = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
         {
-            // ListId = listId,
             ItemId = itemId
         });
 
@@ -37,7 +36,6 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         NotesWeb.Features.ToDo.ToDoItems.GetItem.Response>(
             new NotesWeb.Features.ToDo.ToDoItems.GetItem.Request
             {
-                // ListId = listId,
                 ItemId = itemId
             });
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
@@ -79,7 +77,6 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
 
         var rspUncomplete = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
         {
-            // ListId = listId,
             ItemId = itemId,
             Completed = false
         });
@@ -95,7 +92,6 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         NotesWeb.Features.ToDo.ToDoItems.GetItem.Response>(
             new NotesWeb.Features.ToDo.ToDoItems.GetItem.Request
             {
-                // ListId = listId,
                 ItemId = itemId
             });
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
@@ -125,11 +121,9 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         var fakeTime = App.FakeTime.GetUtcNow();
 
 
-        // var url = $"/api/todo/{listId}/{itemId}/complete";
 
         var rspCompleted = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
         {
-            // ListId = listId,
             ItemId = itemId,
             Completed = true
         });
@@ -145,7 +139,6 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         NotesWeb.Features.ToDo.ToDoItems.GetItem.Response>(
             new NotesWeb.Features.ToDo.ToDoItems.GetItem.Request
             {
-                // ListId = listId,
                 ItemId = itemId
             });
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
@@ -162,14 +155,9 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
     {
         await SetTokenAsync();
 
-        // Create a list
-        var listId = await CreateAListAsync("List for testing uncomplete");
-
-
         // Complete a non-existing item in the list
         var rsp = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
         {
-            // ListId = listId,
             ItemId = Guid.NewGuid()
         });
 

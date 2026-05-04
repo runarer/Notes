@@ -27,7 +27,7 @@ public class GetListTests(App App, LoginState State) : LoggedinTests(App, State)
     }
 
     [Fact]
-    public async Task GetList_ListDoesNotExists_GetListInformation()
+    public async Task GetList_ListDoesNotExists_GetNotFound()
     {
         // SignUp user
         await SetTokenAsync();
