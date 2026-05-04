@@ -177,22 +177,4 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         // Assert 404
         Assert.Equal(HttpStatusCode.NotFound, rsp.StatusCode);
     }
-
-    // [Fact]
-    // public async Task CompleteToDoItem_ListDoesNotExist_ReturnsNotFound()
-    // {
-    //     await SetTokenAsync();
-
-
-    //     // Complete an item in a non-existing list
-    //     var rsp = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
-    //     {
-    //         // ListId = Guid.NewGuid(),
-    //         ItemId = Guid.NewGuid()
-    //     });
-
-
-    //     // Assert 404
-    //     Assert.Equal(HttpStatusCode.NotFound, rsp.StatusCode);
-    // }
 }

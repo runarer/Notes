@@ -67,25 +67,4 @@ public class GetItemTests(App App, LoginState State) : LoggedinTests(App, State)
         Assert.Null(res);
 
     }
-    [Fact]
-    public async Task GetItem_ListDoesNotExists_ReturnsNotFound()
-    {
-        // SignUp user
-        await SetTokenAsync();
-
-
-        // Get Item in list
-        var (rsp, res) = await App.Client.GETAsync<GetItemEndpoint, Request, Response>(
-            new Request
-            {
-                // ListId = Guid.NewGuid(),
-                ItemId = Guid.NewGuid()
-            });
-
-
-        // Assert response NotFound
-        Assert.Equal(HttpStatusCode.NotFound, rsp.StatusCode);
-        Assert.Null(res);
-    }
-
 }

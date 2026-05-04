@@ -20,16 +20,18 @@ public class DeleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
 
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
-        //Get list, check if it exists and that user owns it
-        // var todoList = await GetList(request.ListId, request, ct);
-        // if (todoList is null) return;
 
         // Get Item, check if it exist and that user owns it
         var todoItem = await GetItem(request.ItemId, request, ct);
         if (todoItem is null) return;
 
+        //Get list, check if it exists and that user owns it
+        var todoList = await GetList(todoItem.ParentListId, request, ct);
+        if (todoList is null) return;
+
+
         // All is ok, delete item
-        todoItem.ParentList.UpdatedAtUtc = _timeProvider.GetUtcNow();
+        todoList.UpdatedAtUtc = _timeProvider.GetUtcNow();
         await Repo.ToDoItems.Where(item => item.Id == request.ItemId).ExecuteDeleteAsync(ct);
 
         // todoList.UpdatedAtUtc = _timeProvider.GetUtcNow();
