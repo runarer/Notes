@@ -10,7 +10,8 @@ public class CompleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBCont
 
     public override void Configure()
     {
-        Patch("/todo/{ListId}/{ItemId}/complete");
+        // Patch("/todo/{ListId}/{ItemId}/complete");
+        Patch("/todo/item/{ItemId}/complete");
         Description(x => x.Accepts<Request>());
         PreProcessor<UserPreProcessor>();
         Roles("User");
@@ -19,19 +20,21 @@ public class CompleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBCont
 
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
-        //Get list, check if it exists and that user owns it
-        var todoList = await GetList(request.ListId, request, ct);
-        if (todoList is null) return;
-
         // Get Item, check if it exist and that user owns it
         var todoItem = await GetItem(request.ItemId, request, ct);
         if (todoItem is null) return;
+
+        // //Get list, check if it exists and that user owns it
+        var todoList = await GetList(todoItem.ParentListId, request, ct);
+        if (todoList is null) return;
+
 
         // All is ok, set item to completed
         // todoItem.Completed = request.Query?.Completed ?? true;
         todoItem.Completed = request.Completed ?? true;
         todoItem.UpdatedAtUtc = _timeProvider.GetUtcNow();
         todoList.UpdatedAtUtc = todoItem.UpdatedAtUtc;
+        // todoItem.ParentList.UpdatedAtUtc = todoItem.UpdatedAtUtc;
 
         await Repo.SaveChangesAsync(ct);
         await Send.OkAsync(cancellation: ct);

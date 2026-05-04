@@ -3,18 +3,12 @@ namespace NotesWeb.Features.ToDo.ToDoItems.MoveToDoItem;
 
 public class Request : UserRequest
 {
-    // [FromClaim] public int UserId { get; set; }
     public Guid ItemId { get; set; }
-    public Guid ListId { get; set; }
-    // public Guid ToList { get; set; }
-    [FromQuery] public Query? Query { get; set; }
+    // public Guid ListId { get; set; }
+    [QueryParam] public Guid ToList { get; set; }
 
 }
 
-public class Query
-{
-    public Guid ToList { get; set; }
-}
 
 public class Response
 {
@@ -30,7 +24,7 @@ public class Validator : Validator<Request>
 {
     public Validator()
     {
-        RuleFor(x => x.Query)
-            .NotNull().WithMessage("You need to provide a destination");
+        RuleFor(x => x.ToList)
+            .NotEqual(default(Guid)).WithMessage("You need to provide a destination");
     }
 }

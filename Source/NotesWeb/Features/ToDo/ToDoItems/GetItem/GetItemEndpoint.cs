@@ -7,7 +7,8 @@ public class GetItemEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoint<Re
 {
     public override void Configure()
     {
-        Get("/todo/{ListId}/{ItemId}");
+        // Get("/todo/{ListId}/{ItemId}");
+        Get("/todo/item/{ItemId}");
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
@@ -17,8 +18,8 @@ public class GetItemEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoint<Re
     {
 
         //Get list, check if it exists and that user owns it
-        var todoList = await GetList(request.ListId, request, ct);
-        if (todoList is null) return;
+        // var todoList = await GetList(request.ListId, request, ct);
+        // if (todoList is null) return;
 
         var todoItem = await GetItem(request.ItemId, request, ct);
         if (todoItem is null) return;
