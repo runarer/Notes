@@ -81,7 +81,7 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         {
             ListId = listId,
             ItemId = itemId,
-            Query = new() { Completed = false }
+            Completed = false
         });
 
 
@@ -102,6 +102,56 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         Assert.NotNull(res);
         // Assert it's not completed
         Assert.False(res.Completed);
+        // Assert updated time is correct
+        Assert.NotEqual(res.CreatedAtUtc, res.UpdatedAtUtc);
+        Assert.Equal(fakeTime, res.UpdatedAtUtc);
+    }
+
+
+    [Fact]
+    public async Task CompleteToDoItem_ItemIsCreatedAndCompletedWithQuery_ItemIsCompleted()
+    {
+        // SignUp user
+        await SetTokenAsync();
+
+        // Create a list
+        var listId = await CreateAListAsync("List for testing uncomplete");
+        // Add an item
+        string item = "Test item 1";
+        var itemId = await CreateAnItemAsync(listId, item);
+
+        //Advance time so we can test updatetime
+        App.FakeTime.Advance(TimeSpan.FromHours(2));
+        var fakeTime = App.FakeTime.GetUtcNow();
+
+
+        // var url = $"/api/todo/{listId}/{itemId}/complete";
+
+        var rspCompleted = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
+        {
+            ListId = listId,
+            ItemId = itemId,
+            Completed = true
+        });
+
+
+
+
+        Assert.Equal(HttpStatusCode.OK, rspCompleted.StatusCode);
+        // Get Item 
+        var (rsp, res) = await App.Client.GETAsync<
+        NotesWeb.Features.ToDo.ToDoItems.GetItem.GetItemEndpoint,
+        NotesWeb.Features.ToDo.ToDoItems.GetItem.Request,
+        NotesWeb.Features.ToDo.ToDoItems.GetItem.Response>(
+            new NotesWeb.Features.ToDo.ToDoItems.GetItem.Request
+            {
+                ListId = listId,
+                ItemId = itemId
+            });
+        Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
+        Assert.NotNull(res);
+        // Assert it's not completed
+        Assert.True(res.Completed);
         // Assert updated time is correct
         Assert.NotEqual(res.CreatedAtUtc, res.UpdatedAtUtc);
         Assert.Equal(fakeTime, res.UpdatedAtUtc);
