@@ -1,10 +1,8 @@
-using System;
 
 namespace NotesWeb.Features.ToDo.ToDoItems.GetItem;
 
 public class Request : UserRequest
 {
-    // public Guid ListId { get; set; }
     public Guid ItemId { get; set; }
 }
 

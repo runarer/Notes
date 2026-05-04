@@ -3,7 +3,6 @@ namespace NotesWeb.Features.ToDo.ToDoLists.GetLists;
 
 public class Request : UserRequest
 {
-    // [FromClaim] public int UserId { get; set; }
     public string? Search { get; set; }
     public DateTimeOffset? FromUtc { get; set; }
     public DateTimeOffset? ToUtc { get; set; }
@@ -29,7 +28,7 @@ public class Validator : Validator<Request>
 
         RuleFor(x => x.FromUtc)
             .LessThan(timeProvider.GetUtcNow())
-            .When(x => x.FromUtc.HasValue) // Is this needed here 
+            .When(x => x.FromUtc.HasValue)
             .WithMessage("Date '{PropertyName}' must be in the past!");
         RuleFor(x => x.FromUtc)
             .LessThan(x => x.ToUtc)

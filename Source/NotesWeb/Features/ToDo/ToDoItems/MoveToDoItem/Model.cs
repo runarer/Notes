@@ -4,7 +4,6 @@ namespace NotesWeb.Features.ToDo.ToDoItems.MoveToDoItem;
 public class Request : UserRequest
 {
     public Guid ItemId { get; set; }
-    // public Guid ListId { get; set; }
     [QueryParam] public Guid ToList { get; set; }
 
 }

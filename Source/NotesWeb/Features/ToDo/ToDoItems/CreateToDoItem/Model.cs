@@ -7,7 +7,6 @@ public class Request : UserRequest
 
     public string Title { get; set; } = null!;
 
-    // [FromClaim] public int UserId { get; set; }
 }
 
 public class Response

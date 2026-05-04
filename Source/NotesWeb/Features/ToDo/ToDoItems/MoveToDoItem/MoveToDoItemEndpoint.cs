@@ -10,7 +10,6 @@ public class MoveToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContext 
 
     public override void Configure()
     {
-        // Patch("/todo/{ListId}/{ItemId}/move");
         Patch("/todo/item/{ItemId}/move");
         Description(x => x.Accepts<Request>());
         PreProcessor<UserPreProcessor>();
@@ -40,7 +39,6 @@ public class MoveToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContext 
         todoItem.ParentListId = toList.Id;
         todoItem.UpdatedAtUtc = time;
         toList.UpdatedAtUtc = time;
-        // fromList.UpdatedAtUtc = todoItem.UpdatedAtUtc;
 
         await Repo.SaveChangesAsync(ct);
         await Send.OkAsync(Map.FromEntity(todoItem), cancellation: ct);

@@ -55,8 +55,6 @@ public class UserLoginEndpoint(NoteBoardDBContext dbContext, IPasswordHasher<Use
         });
 
         await Send.OkAsync(new Response() { Token = jwtToken }, ct);
-
-        // await Send.OkAsync(JwtBearer.CreateToken(jwtSecret, p => p["UserId"] = "001"));
     }
 }
 

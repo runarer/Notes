@@ -1,4 +1,4 @@
-using System;
+
 using NotesWeb.Data;
 
 namespace NotesWeb.Features.ToDo.ToDoItems.GetItem;
@@ -7,7 +7,6 @@ public class GetItemEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoint<Re
 {
     public override void Configure()
     {
-        // Get("/todo/{ListId}/{ItemId}");
         Get("/todo/item/{ItemId}");
         PreProcessor<UserPreProcessor>();
         Roles("User");
@@ -16,11 +15,6 @@ public class GetItemEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoint<Re
 
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
-
-        //Get list, check if it exists and that user owns it
-        // var todoList = await GetList(request.ListId, request, ct);
-        // if (todoList is null) return;
-
         var todoItem = await GetItem(request.ItemId, request, ct);
         if (todoItem is null) return;
 

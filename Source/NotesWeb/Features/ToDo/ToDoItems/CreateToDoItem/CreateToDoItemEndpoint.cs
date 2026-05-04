@@ -7,7 +7,6 @@ public class CreateToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
 {
 
     private readonly TimeProvider _timeProvider = timeProvider;
-    // private readonly NoteBoardDBContext _dbContext = dbContext;
 
     public override void Configure()
     {

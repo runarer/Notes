@@ -11,7 +11,6 @@ public class DeleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
 
     public override void Configure()
     {
-        // Delete("/todo/{ListId}/{ItemId}");
         Delete("/todo/item/{ItemId}");
         PreProcessor<UserPreProcessor>();
         Roles("User");
