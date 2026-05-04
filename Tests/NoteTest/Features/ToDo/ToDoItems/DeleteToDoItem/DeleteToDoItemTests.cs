@@ -42,9 +42,14 @@ public class DeleteToDoItemTests(App App, LoginState State) : LoggedinTests(App,
     [Fact]
     public async Task DeleteItem_DeleteAnItemThatDoNotExists_ReturnNotFound()
     {
-        // Create a list
-        // Delete item
-        // Assert NotFound
+        // SignUp user
+        await SetTokenAsync();
+
+        // Delete Item
+        var rsp = await App.Client.DELETEAsync<DeleteToDoItemEndpoint, Request>(new Request { ItemId = Guid.NewGuid() });
+
+        // Check return
+        Assert.Equal(HttpStatusCode.NotFound, rsp.StatusCode);
 
     }
 }
