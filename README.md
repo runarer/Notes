@@ -19,7 +19,8 @@ stays unaltered. If existing code need changes, everything is located in its fea
 folder.
 
 VSA is also often recommended as a way to work with AI/code agents since it limits
-the context needed when creating new features.
+the context needed. I have not tested this claim, but it seems like a good idea to
+use an architecture that both human and ai can understand and work with.
 
 ## Start
 
