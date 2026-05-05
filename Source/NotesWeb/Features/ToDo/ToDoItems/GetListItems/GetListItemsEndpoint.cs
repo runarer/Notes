@@ -4,8 +4,10 @@ using NotesWeb.Data;
 
 namespace NotesWeb.Features.ToDo.ToDoItems.GetListItems;
 
-public class GetListItemsEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoint<Request, Response, Mapper>(dbContext)
+public class GetListItemsEndpoint(NoteBoardDBContext dbContext, TimeProvider timeProvider) : ItemBaseEndpoint<Request, Response, Mapper>(dbContext)
 {
+    private readonly TimeProvider _timeProvider = timeProvider;
+
     public override void Configure()
     {
         Get("/todo/{ListId}/items");
@@ -21,6 +23,8 @@ public class GetListItemsEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoi
 
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
+        if (request.FromUtc is not null && request.FromUtc > _timeProvider.GetUtcNow())
+            ThrowError(r => r.FromUtc, "Date 'from Utc' must be in the past!");
 
         //Get list, check if it exists and that user owns it
         var todoList = await GetList(request.ListId, request, ct);

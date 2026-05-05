@@ -25,11 +25,6 @@ public class Validator : Validator<Request>
 {
     public Validator(TimeProvider timeProvider)
     {
-
-        RuleFor(x => x.FromUtc)
-            .LessThan(timeProvider.GetUtcNow())
-            .When(x => x.FromUtc.HasValue)
-            .WithMessage("Date '{PropertyName}' must be in the past!");
         RuleFor(x => x.FromUtc)
             .LessThan(x => x.ToUtc)
             .When(x => x.ToUtc.HasValue && x.FromUtc.HasValue)
