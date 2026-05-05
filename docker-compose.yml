@@ -48,7 +48,7 @@ services:
       ASPNETCORE_URLS: http://+:8080
       ConnectionStrings:DefaultConnection: Host=db;Port=5432;Database=${DB_DATABASE};User Id=${DB_USER};Password=${DB_PASSWORD}
       Seq:Location: http://seq:5341/${SEQ_LOCATION}
-      Auth:JwtSecretKey: ${JWT_SECRET:?NotesWeb need JwtSecretKey}
+      Auth:JwtSecretKey: ${Auth__JwtSecretKey:?NotesWeb need JwtSecretKey}
     ports:
       - "8080:8080"
     depends_on:
