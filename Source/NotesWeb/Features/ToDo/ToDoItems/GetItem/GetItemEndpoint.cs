@@ -11,6 +11,11 @@ public class GetItemEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoint<Re
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
+        Summary(s =>
+        {
+            s.Summary = "Get item info";
+            s.Description = "Get information about an item.";
+        });
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)

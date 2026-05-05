@@ -14,6 +14,11 @@ public class CreateToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
+        Summary(s =>
+        {
+            s.Summary = "Creaete an item";
+            s.Description = "Creates an item with title, it is set to uncompleted by default.";
+        });
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)

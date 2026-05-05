@@ -13,6 +13,11 @@ public class GetListEndpoint(NoteBoardDBContext dbContext) : Endpoint<Request, R
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
+        Summary(s =>
+        {
+            s.Summary = "Get List info";
+            s.Description = "Get information of a list";
+        });
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)

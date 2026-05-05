@@ -16,6 +16,11 @@ public class UserLoginEndpoint(NoteBoardDBContext dbContext, IPasswordHasher<Use
     {
         Post("/users/login");
         AllowAnonymous();
+        Summary(s =>
+            {
+                s.Summary = "Login user";
+                s.Description = "Login with email and password. Jwt returned that can be used to autorize.";
+            });
 
     }
 

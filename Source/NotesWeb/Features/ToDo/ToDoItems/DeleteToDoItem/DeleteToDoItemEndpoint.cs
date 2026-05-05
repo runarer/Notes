@@ -15,6 +15,11 @@ public class DeleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
+        Summary(s =>
+        {
+            s.Summary = "Delete an item";
+            s.Description = "Delete an item";
+        });
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)

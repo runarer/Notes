@@ -15,6 +15,11 @@ public class CompleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBCont
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
+        Summary(s =>
+    {
+        s.Summary = "Completes an item";
+        s.Description = "Completes an item, theres a optional query parameter for setting the value to true or false";
+    });
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)

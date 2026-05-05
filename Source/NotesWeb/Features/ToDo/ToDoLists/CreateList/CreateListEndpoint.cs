@@ -16,6 +16,11 @@ public class CreateListEndpoint(TimeProvider timeProvider, NoteBoardDBContext db
         Roles("User");
         Claims("UserId");
         PreProcessor<UserPreProcessor>();
+        Summary(s =>
+        {
+            s.Summary = "Create a todo list";
+            s.Description = "Create a todo list with a title";
+        });
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)

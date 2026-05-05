@@ -15,6 +15,11 @@ public class MoveToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContext 
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
+        Summary(s =>
+        {
+            s.Summary = "Move item to an other list";
+            s.Description = "Moves an item to another list.";
+        });
     }
 
 

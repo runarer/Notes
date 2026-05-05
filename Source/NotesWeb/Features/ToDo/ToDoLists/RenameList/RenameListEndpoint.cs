@@ -14,6 +14,11 @@ public class RenameListEndpoint(TimeProvider timeProvider, NoteBoardDBContext db
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
+        Summary(s =>
+        {
+            s.Summary = "Rename a list";
+            s.Description = "Changes the title of a list";
+        });
 
     }
 

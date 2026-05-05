@@ -14,6 +14,11 @@ public class GetListsEndpoint(NoteBoardDBContext dbContext) : Endpoint<Request, 
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
+        Summary(s =>
+        {
+            s.Summary = "Get lists";
+            s.Description = "Get a users lists, can use searchterm and time filtering.";
+        });
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)

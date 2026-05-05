@@ -12,6 +12,11 @@ public class GetListItemsEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoi
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
+        Summary(s =>
+        {
+            s.Summary = "Get list of items in a list";
+            s.Description = "This returns a list of the item in a list, can filter on searchterm, completed and time";
+        });
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)
@@ -25,6 +30,9 @@ public class GetListItemsEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoi
 
         if (!string.IsNullOrWhiteSpace(request.Search))
             listQuery = listQuery.Where(list => list.Title.Contains(request.Search));
+
+        if (request.Completed is not null)
+            listQuery = listQuery.Where(list => list.Completed == request.Completed);
 
         if (request.FromUtc is not null)
             listQuery = listQuery.Where(list => list.UpdatedAtUtc >= request.FromUtc);

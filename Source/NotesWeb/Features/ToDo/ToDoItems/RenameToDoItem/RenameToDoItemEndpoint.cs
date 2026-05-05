@@ -14,6 +14,11 @@ public class RenameToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
+        Summary(s =>
+        {
+            s.Summary = "Rename an item";
+            s.Description = "Rename the title of an item.";
+        });
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)
