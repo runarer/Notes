@@ -20,7 +20,8 @@ the context needed when creating new features.
 
 ## Start
 
-The project is started with 'docker compose up'.
+The project is started with 'docker compose up'. '/swagger' is available for easy
+api calls.
 After signing up, a loggin is required to get the the Jwt.
 Then lists can be added and items can be added to it.
 
