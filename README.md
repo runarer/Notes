@@ -5,6 +5,9 @@ A _Slightly_ over-engineered todo-api, because that's what one does.
 This is a project for exploring Vertical Slice Architecture and to learn
 more about important parts of an api like like logging and IAM.
 
+The library [Fast-Endpoints](https://fast-endpoints.com/) is used instead of
+Minimal-API or controllers, since it's tailored to VSA.
+
 VSA is based on the idea "what change together lives together" and is often
 recommended as a way to make very extendable and scalable system. We can scale
 different part of the system independent. If the api sees alot of read or alot
