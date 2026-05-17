@@ -17,6 +17,11 @@ public class SignUpEndpoint(TimeProvider timeProvider, NoteBoardDBContext dbCont
     {
         Post("/users/signup");
         AllowAnonymous();
+        Summary(s =>
+        {
+            s.Summary = "Sign up endpoint";
+            s.Description = "Sign up a user for the service, fullName is optional";
+        });
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)

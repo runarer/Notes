@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="FastEndpoints.Testing" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="Testcontainers.PostgreSql" />
     <PackageReference Include="xunit.v3.mtp-v2" />
   </ItemGroup>
@@ -28,6 +29,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\ToDo\ToDLists\CreateList\" />
+    <Folder Include="Features\ToDo\ToDLists\DeleteList\" />
+    <Folder Include="Features\ToDo\ToDLists\GetLists\" />
+    <Folder Include="Features\ToDo\ToDLists\RenameList\" />
+    <Folder Include="Features\ToDo\ToDoItems\CompleteToDoItem\" />
+    <Folder Include="Features\ToDo\ToDoItems\CreateToDoItem\" />
+    <Folder Include="Features\ToDo\ToDoItems\DeleteToDoItem\" />
+    <Folder Include="Features\ToDo\ToDoItems\GetList\" />
+    <Folder Include="Features\ToDo\ToDoItems\MoveToDoItem\" />
+    <Folder Include="Features\ToDo\ToDoItems\RenameToDoItem\" />
     <Folder Include="Features\Users\Login\" />
   </ItemGroup>
 

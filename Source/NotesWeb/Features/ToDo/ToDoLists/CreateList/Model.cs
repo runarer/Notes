@@ -1,17 +1,15 @@
 
 namespace NotesWeb.Features.ToDo.ToDoLists.CreateList;
 
-public class Request
+public class Request : UserRequest
 {
-    public required string Title { get; set; }
-    [FromClaim]
-    public int UserId { get; set; }
+    public string Title { get; set; } = null!;
 }
 
 public class Response
 {
     public Guid Id { get; set; }
-    public required string Title { get; set; }
+    public string Title { get; set; } = null!;
     public DateTimeOffset CreatedAtUtc { get; set; }
     public DateTimeOffset UpdatedAtUtc { get; set; }
 }

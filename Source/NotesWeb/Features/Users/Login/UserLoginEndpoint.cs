@@ -16,6 +16,11 @@ public class UserLoginEndpoint(NoteBoardDBContext dbContext, IPasswordHasher<Use
     {
         Post("/users/login");
         AllowAnonymous();
+        Summary(s =>
+            {
+                s.Summary = "Login user";
+                s.Description = "Login with email and password. Jwt returned that can be used to autorize.";
+            });
 
     }
 
@@ -49,9 +54,9 @@ public class UserLoginEndpoint(NoteBoardDBContext dbContext, IPasswordHasher<Use
         var jwtToken = JwtBearer.CreateToken(o =>
         {
             o.SigningKey = jwtSecret; // get this secret from an external place
-            o.ExpireAt = DateTime.UtcNow.AddMinutes(30);
+            o.ExpireAt = DateTime.UtcNow.AddDays(30);
             o.User.Roles.Add("User");
-            o.User["UserId"] = user.Id.ToString();
+            o.User.Claims.Add(("UserId", user.Id.ToString()));
         });
 
         await Send.OkAsync(new Response() { Token = jwtToken }, ct);

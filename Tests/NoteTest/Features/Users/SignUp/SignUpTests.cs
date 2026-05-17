@@ -6,7 +6,7 @@ namespace NoteTest.Features.Users.SignUp;
 
 public class SignUpTests(App App) : TestBase<App>
 {
-    private Request _validUser = new()
+    private readonly Request _validUser = new()
     {
         Username = "Bobb",
         FullName = "Bob Bobby Bobson",

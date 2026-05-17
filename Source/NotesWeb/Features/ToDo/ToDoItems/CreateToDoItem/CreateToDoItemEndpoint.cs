@@ -1,45 +1,40 @@
 
-using Microsoft.EntityFrameworkCore;
 using NotesWeb.Data;
 
 namespace NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem;
 
-public class CreateToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContext dbContext) : Endpoint<Request, Response, Mapper>
+public class CreateToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContext dbContext) : ItemBaseEndpoint<Request, Response, Mapper>(dbContext)
 {
 
     private readonly TimeProvider _timeProvider = timeProvider;
-    private readonly NoteBoardDBContext _dbContext = dbContext;
 
     public override void Configure()
     {
-        Post("/todo/{listId}");
-        Roles("user");
+        Post("/todo/{ListId}");
+        PreProcessor<UserPreProcessor>();
+        Roles("User");
         Claims("UserId");
+        Summary(s =>
+        {
+            s.Summary = "Creaete an item";
+            s.Description = "Creates an item with title, it is set to uncompleted by default.";
+        });
     }
 
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
+        //Get list, check if it exists and that user owns it
+        var todoList = await GetList(request.ListId, request, ct);
+        if (todoList is null) return;
 
-        bool userExists = await _dbContext.Users.AnyAsync(user => user.Id == request.UserId, ct);
-        if (!userExists)
-            AddError(r => r.UserId, "this user does not exist!");
-
-        var todoList = await _dbContext.ToDoLists.FindAsync([request.ListId], cancellationToken: ct);
-        if (todoList is null)
-            AddError(r => r.ListId, "this list does not exist!");
-
-        ThrowIfAnyErrors();
-
-        todoList!.UpdatedAtUtc = _timeProvider.GetUtcNow();
-
+        // All is ok, create the item
         var todoItem = Map.ToEntity(request);
         todoItem.CreatedAtUtc = _timeProvider.GetUtcNow();
-        todoItem.UpdatedAtUtc = todoList.CreatedAtUtc;
-        todoItem.ParentListId = todoList.Id;
+        todoItem.UpdatedAtUtc = todoItem.CreatedAtUtc;
         todoList.UpdatedAtUtc = todoItem.CreatedAtUtc;
 
-        await _dbContext.ToDoItems.AddAsync(todoItem, ct);
-        await _dbContext.SaveChangesAsync(ct);
+        await Repo.ToDoItems.AddAsync(todoItem, ct);
+        await Repo.SaveChangesAsync(ct);
 
         var response = Map.FromEntity(todoItem);
         await Send.CreatedAtAsync("/todo/{}/{}", new { ListId = todoList.Id, ItemId = todoItem.Id }, response, cancellation: ct);

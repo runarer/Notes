@@ -11,6 +11,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Microsoft.AspNetCore.HttpLogging;
 using OpenTelemetry.Metrics;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,10 +23,10 @@ builder.Logging.ClearProviders();
 builder.Logging.AddOpenTelemetry(options =>
 {
     options.SetResourceBuilder(ResourceBuilder.CreateDefault()
-        .AddService(serviceName)); // Identify your service
+        .AddService(serviceName));
 
-    options.IncludeFormattedMessage = true; // Includes the readable message
-    options.IncludeScopes = true;          // Captures properties from ILogger.BeginScope
+    options.IncludeFormattedMessage = true;
+    options.IncludeScopes = true;
     options.AddProcessor(new RedactionProcessor());
     options.AddOtlpExporter(otlpOptions =>
     {
@@ -33,8 +34,8 @@ builder.Logging.AddOpenTelemetry(options =>
         otlpOptions.Endpoint = new Uri(location);
         otlpOptions.Protocol = OtlpExportProtocol.HttpProtobuf;
     });
-    // if (builder.Environment.IsDevelopment())
-    options.AddConsoleExporter();
+    if (builder.Environment.IsDevelopment())
+        options.AddConsoleExporter();
 });
 
 builder.Services.AddDbContext<NoteBoardDBContext>(
@@ -44,15 +45,22 @@ builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddAuthenticationJwtBearer(s => s.SigningKey = jwtkey);
-builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("Users", x => x.RequireRole("User").RequireClaim("UserId")); // This might not be needed
+builder.Services.AddAuthentication(o => o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme);
+builder.Services.AddAuthorization();
 builder.Services.AddFastEndpoints();
 
-builder.Services.SwaggerDocument();
+builder.Services.SwaggerDocument(options =>
+{
+    options.DocumentSettings = s =>
+    {
+        s.Title = "ToDo Lists Api";
+        s.Version = "v1";
+    };
+});
 
 builder.Services.AddHttpLogging(logging =>
 {
-    logging.LoggingFields = HttpLoggingFields.All; // Customize based on PII/Performance needs
+    logging.LoggingFields = HttpLoggingFields.All;
 });
 
 var app = builder.Build();
@@ -66,10 +74,7 @@ app.UseFastEndpoints(c =>
     c.Endpoints.RoutePrefix = "api";
 });
 
-// if (app.Environment.IsDevelopment())
-// {
 app.UseSwaggerGen();
-// }
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<NoteBoardDBContext>();
