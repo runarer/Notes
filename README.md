@@ -2,13 +2,16 @@
 
 ## Todo
 
-- [ ] Remake the model
+- [x] Remake the model
 - [ ] Add interfaces for data access, add theses to dbcontext.
 - [ ] Add a check if valid user for each request -> this can be removed if Google sign in is used later
 - [ ] Remove every file thats not used
-- [ ] Remove code thats not used
-- [ ] Add some comments for redactor and such
+- [ ] Remove code thats not used, and comment code that is. Do this while changing endpoint to use new intrefaces.
+- [x] Add some comments for redactor and such
 - [ ] Change filtering to use Due date
+- [ ] Create a new branch from main and focus on api changes, or copy frontend somewhere and then remove it from sln and branch.
+- [ ] Add the frontend, frontend may not need google sign in.
+- [ ] Remove "Commons/PreProcessors"
 
 ## Old stuff
 
