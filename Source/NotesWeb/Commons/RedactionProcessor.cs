@@ -5,6 +5,8 @@ using OpenTelemetry.Logs;
 
 namespace NotesWeb.Commons;
 
+// This class redact tokens and password from Log messages before they are passed on
+// It uses regex to match and replace text
 internal sealed partial class RedactionProcessor : BaseProcessor<LogRecord>
 {
     public override void OnEnd(LogRecord logRecord)
@@ -36,6 +38,7 @@ internal sealed partial class RedactionProcessor : BaseProcessor<LogRecord>
                     // Redact token
                     redactedValue = TokenRegex.Replace(redactedValue, "\"token\":\"***TOKEN-REDACTED***\"");
 
+                    // Was there any change? then we replace with new values
                     if (redactedValue != entryVal)
                     {
                         return new KeyValuePair<string, object?>(item.Key, redactedValue);
@@ -57,7 +60,7 @@ internal sealed partial class RedactionProcessor : BaseProcessor<LogRecord>
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
     }
 

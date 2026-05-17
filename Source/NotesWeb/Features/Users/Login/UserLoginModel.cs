@@ -14,10 +14,8 @@ public class Response
 }
 
 
-/// <summary>
 /// The validation of email and password is not critical as we do not create anything with this information,
 /// but by checking we can save resources on server as the endpoint terminates early with wrong input.
-/// </summary>
 public class Validator : Validator<Request>
 {
     public Validator()

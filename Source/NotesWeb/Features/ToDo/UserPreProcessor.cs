@@ -5,11 +5,8 @@ using NotesWeb.Data;
 
 namespace NotesWeb.Features.ToDo;
 
-/// <summary>
-/// This PreProcessor check if a user exists
-/// </summary>
-/// <param name="dbContext"></param>
-public class UserPreProcessor/*(NoteBoardDBContext dbContext)*/ : IPreProcessor<UserRequest>
+// This PreProcessor check if a user exists
+public class UserPreProcessor : IPreProcessor<UserRequest>
 {
     public async Task PreProcessAsync(IPreProcessorContext<UserRequest> context, CancellationToken ct)
     {
