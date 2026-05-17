@@ -8,7 +8,7 @@
 - [ ] Remove every file thats not used
 - [ ] Remove code thats not used
 - [ ] Add some comments for redactor and such
-- [ ]
+- [ ] Change filtering to use Due date
 
 ## Old stuff
 
