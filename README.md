@@ -1,5 +1,17 @@
 # Notes
 
+## Todo
+
+- [ ] Remake the model
+- [ ] Add interfaces for data access, add theses to dbcontext.
+- [ ] Add a check if valid user for each request -> this can be removed if Google sign in is used later
+- [ ] Remove every file thats not used
+- [ ] Remove code thats not used
+- [ ] Add some comments for redactor and such
+- [ ]
+
+## Old stuff
+
 A _Slightly_ over-engineered todo-api, because that's what one does.
 
 This is a project for exploring Vertical Slice Architecture and to learn
