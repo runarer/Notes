@@ -27,7 +27,6 @@ public class Validator : Validator<Request>
     public Validator()
     {
         RuleFor(x => x.Title)
-            .NotEmpty().WithMessage("You need to provide a title")
             .MinimumLength(3).WithMessage("Title is to short")
             .MaximumLength(30).WithMessage("Title is to long");
 

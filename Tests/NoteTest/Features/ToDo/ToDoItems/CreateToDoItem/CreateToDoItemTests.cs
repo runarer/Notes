@@ -1,6 +1,6 @@
 
 using System.Net;
-
+using NotesWeb.Features.ToDo.ToDoItems;
 using NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem;
 
 namespace NoteTest.Features.ToDo.ToDoItems.CreateToDoItem;
@@ -24,7 +24,7 @@ public class CreateToDoItemTests(App App, LoginState State) : LoggedinTests(App,
         _validRequest.ListId = listId;
 
 
-        var (rsp, res) = await App.Client.POSTAsync<CreateToDoItemEndpoint, Request, Response>(_validRequest);
+        var (rsp, res) = await App.Client.POSTAsync<CreateToDoItemEndpoint, Request, ItemResponse>(_validRequest);
 
         Assert.Equal(HttpStatusCode.Created, rsp.StatusCode);
         Assert.NotNull(res);
@@ -64,7 +64,7 @@ public class CreateToDoItemTests(App App, LoginState State) : LoggedinTests(App,
         validRequest.Description = null;
         validRequest.Due = null;
 
-        var (rsp, res) = await App.Client.POSTAsync<CreateToDoItemEndpoint, Request, Response>(validRequest);
+        var (rsp, res) = await App.Client.POSTAsync<CreateToDoItemEndpoint, Request, ItemResponse>(validRequest);
 
         Assert.Equal(HttpStatusCode.Created, rsp.StatusCode);
         Assert.NotNull(res);

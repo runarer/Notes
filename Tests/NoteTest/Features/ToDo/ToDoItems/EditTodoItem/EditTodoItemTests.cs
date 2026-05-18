@@ -1,5 +1,6 @@
 
 using System.Net;
+using NotesWeb.Features.ToDo.ToDoItems;
 using NotesWeb.Features.ToDo.ToDoItems.EditToDoItem;
 
 namespace NoteTest.Features.ToDo.ToDoItems.EditToDoItem;
@@ -29,7 +30,7 @@ public class EditToDoItemTests(App App, LoginState State) : LoggedinTests(App, S
         };
 
         // Edit item
-        var (rsp, res) = await App.Client.PATCHAsync<EditToDoItemEndpoint, Request, Response>(request);
+        var (rsp, res) = await App.Client.PATCHAsync<EditToDoItemEndpoint, Request, ItemResponse>(request);
 
         // Assert item is now edited
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
@@ -42,7 +43,6 @@ public class EditToDoItemTests(App App, LoginState State) : LoggedinTests(App, S
     }
 
     [Theory]
-    [InlineData("", "You need to provide a title")]
     [InlineData("s", "Title is to short")]
     [InlineData("ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss", "Title is to long")]
     public async Task EditToDoItem_CreateAnItemEditItWithInvalidTitles_ReturnsProblemDetailsWithErrorMessage(string title, string error)
@@ -74,10 +74,68 @@ public class EditToDoItemTests(App App, LoginState State) : LoggedinTests(App, S
     }
 
     [Fact]
+    public async Task EditToDoItem_EditAnItemWithDueDateInThePast_ReturnsProblemDetailsWithErrorMessage()
+    {
+        await SetTokenAsync();
+        var expected = new[] {
+            ("due", "Due date cannot be in the past")};
+
+        // Create first list
+        var list = await CreateAListAsync("List for invalids");
+
+        // Create item in first list
+        var itemId = await CreateAnItemAsync(list, "Item to move");
+
+        // Edit item
+        var (rsp, res) = await App.Client.PATCHAsync<EditToDoItemEndpoint, Request, ProblemDetails>(
+            new Request
+            {
+                ItemId = itemId,
+                Due = App.FakeTime.GetUtcNow().AddDays(-1)
+            });
+
+        Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
+        Assert.NotNull(res);
+
+        Assert.Single(res.Errors);
+        Assert.Equivalent(expected, res.Errors.Select(e => (e.Name, e.Reason)));
+
+    }
+
+    [Fact]
+    public async Task EditToDoItem_DescriptionIsTooLong_ReturnsProblemDetailsWithErrorMessage()
+    {
+        await SetTokenAsync();
+        var expected = new[] {
+            ("description", "Description is to long")};
+
+        // Create first list
+        var list = await CreateAListAsync("List for invalids");
+
+        // Create item in first list
+        var itemId = await CreateAnItemAsync(list, "Item to move");
+
+        // Edit item
+        var (rsp, res) = await App.Client.PATCHAsync<EditToDoItemEndpoint, Request, ProblemDetails>(
+            new Request
+            {
+                ItemId = itemId,
+                Description = new string('s', 201)
+            });
+
+        Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
+        Assert.NotNull(res);
+
+        Assert.Single(res.Errors);
+        Assert.Equivalent(expected, res.Errors.Select(e => (e.Name, e.Reason)));
+
+    }
+
+    [Fact]
     public async Task EditToDoItem_ItemDoesNotExist_ReturnNotFound()
     {
         // Edit item
-        var (rsp, _) = await App.Client.PATCHAsync<EditToDoItemEndpoint, Request, Response>(new Request
+        var (rsp, _) = await App.Client.PATCHAsync<EditToDoItemEndpoint, Request, ItemResponse>(new Request
         {
             ItemId = Guid.NewGuid(),
             Title = "Test"

@@ -3,7 +3,7 @@ using NotesWeb.Data;
 
 namespace NotesWeb.Features.ToDo.ToDoItems.MoveToDoItem;
 
-public class MoveToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContext dbContext) : ItemBaseEndpoint<Request, Response, Mapper>(dbContext)
+public class MoveToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContext dbContext) : ItemBaseEndpoint<Request, ItemResponse, ItemMapper<Request>>(dbContext)
 {
 
     private readonly TimeProvider _timeProvider = timeProvider;

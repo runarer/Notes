@@ -3,7 +3,7 @@ using NotesWeb.Data;
 
 namespace NotesWeb.Features.ToDo.ToDoItems.GetItem;
 
-public class GetItemEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoint<Request, Response, Mapper>(dbContext)
+public class GetItemEndpoint(NoteBoardDBContext dbContext) : ItemBaseEndpoint<Request, ItemResponse, ItemMapper<Request>>(dbContext)
 {
     public override void Configure()
     {

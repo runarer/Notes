@@ -22,7 +22,8 @@ public class ResponseItem
 
 public class Response
 {
-    public ResponseItem[] List { get; set; } = [];
+    // public ResponseItem[] List { get; set; } = [];
+    public ItemResponse[] List { get; set; } = [];
 }
 
 public class Validator : Validator<Request>

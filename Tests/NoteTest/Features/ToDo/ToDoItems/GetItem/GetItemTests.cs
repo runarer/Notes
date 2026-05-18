@@ -1,5 +1,6 @@
 
 using System.Net;
+using NotesWeb.Features.ToDo.ToDoItems;
 using NotesWeb.Features.ToDo.ToDoItems.GetItem;
 
 namespace NoteTest.Features.ToDo.ToDoItems.GetItem;
@@ -22,13 +23,13 @@ public class GetItemTests(App App, LoginState State) : LoggedinTests(App, State)
         var (rspPost, resPost) = await App.Client.POSTAsync<
             NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.CreateToDoItemEndpoint,
             NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request,
-            NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Response>(_validRequest);
+            ItemResponse>(_validRequest);
         Assert.Equal(HttpStatusCode.Created, rspPost.StatusCode);
         Assert.NotNull(resPost);
 
 
         // Get Item back
-        var (rsp, res) = await App.Client.GETAsync<GetItemEndpoint, Request, Response>(
+        var (rsp, res) = await App.Client.GETAsync<GetItemEndpoint, Request, ItemResponse>(
             new Request
             {
                 ItemId = resPost.ItemId
@@ -53,7 +54,7 @@ public class GetItemTests(App App, LoginState State) : LoggedinTests(App, State)
 
 
         // Get Item from list
-        var (rsp, res) = await App.Client.GETAsync<GetItemEndpoint, Request, Response>(
+        var (rsp, res) = await App.Client.GETAsync<GetItemEndpoint, Request, ItemResponse>(
             new Request
             {
                 ItemId = Guid.NewGuid()

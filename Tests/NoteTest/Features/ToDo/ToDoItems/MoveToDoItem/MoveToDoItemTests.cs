@@ -1,5 +1,6 @@
 
 using System.Net;
+using NotesWeb.Features.ToDo.ToDoItems;
 using NotesWeb.Features.ToDo.ToDoItems.MoveToDoItem;
 
 namespace NoteTest.Features.ToDo.ToDoItems.MoveToDoItem;
@@ -25,7 +26,7 @@ public class MoveToDoItemTests(App App, LoginState State) : LoggedinTests(App, S
         };
 
         // Move item from first to second list
-        var (rsp, res) = await App.Client.PATCHAsync<MoveToDoItemEndpoint, Request, Response>(request);
+        var (rsp, res) = await App.Client.PATCHAsync<MoveToDoItemEndpoint, Request, ItemResponse>(request);
 
         // Assert item is in second list
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);

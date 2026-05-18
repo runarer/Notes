@@ -1,5 +1,6 @@
 
 using System.Net;
+using NotesWeb.Features.ToDo.ToDoItems;
 using NotesWeb.Features.ToDo.ToDoItems.CompleteToDoItem;
 
 namespace NoteTest.Features.ToDo.ToDoItems.CompleteToDoItem;
@@ -33,7 +34,7 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         var (rsp, res) = await App.Client.GETAsync<
         NotesWeb.Features.ToDo.ToDoItems.GetItem.GetItemEndpoint,
         NotesWeb.Features.ToDo.ToDoItems.GetItem.Request,
-        NotesWeb.Features.ToDo.ToDoItems.GetItem.Response>(
+        ItemResponse>(
             new NotesWeb.Features.ToDo.ToDoItems.GetItem.Request
             {
                 ItemId = itemId
@@ -89,7 +90,7 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         var (rsp, res) = await App.Client.GETAsync<
         NotesWeb.Features.ToDo.ToDoItems.GetItem.GetItemEndpoint,
         NotesWeb.Features.ToDo.ToDoItems.GetItem.Request,
-        NotesWeb.Features.ToDo.ToDoItems.GetItem.Response>(
+        ItemResponse>(
             new NotesWeb.Features.ToDo.ToDoItems.GetItem.Request
             {
                 ItemId = itemId
@@ -136,7 +137,7 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         var (rsp, res) = await App.Client.GETAsync<
         NotesWeb.Features.ToDo.ToDoItems.GetItem.GetItemEndpoint,
         NotesWeb.Features.ToDo.ToDoItems.GetItem.Request,
-        NotesWeb.Features.ToDo.ToDoItems.GetItem.Response>(
+        ItemResponse>(
             new NotesWeb.Features.ToDo.ToDoItems.GetItem.Request
             {
                 ItemId = itemId

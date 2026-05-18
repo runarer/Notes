@@ -1,4 +1,5 @@
 using System.Net;
+using NotesWeb.Features.ToDo.ToDoItems;
 
 namespace NoteTest.Features.ToDo;
 
@@ -83,7 +84,7 @@ public class LoggedinTests(App app, LoginState state) : TestBase<App, LoginState
         var (rsp, res) = await App.Client.POSTAsync<
             NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.CreateToDoItemEndpoint,
             NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request,
-            NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Response>(
+            ItemResponse>(
                 new NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request
                 {
                     ListId = listId,

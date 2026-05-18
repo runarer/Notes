@@ -1,8 +1,10 @@
 using NotesWeb.Entities;
 
-namespace NotesWeb.Features.ToDo.ToDoItems.MoveToDoItem;
+namespace NotesWeb.Features.ToDo.ToDoItems;
 
-public class Mapper : Mapper<Request, ItemResponse, ToDoItem>
+// Mapper for endpoints that return an ItemResponse, but have different request types. 
+public class ItemMapper<TRequest> : Mapper<TRequest, ItemResponse, ToDoItem>
+    where TRequest : notnull
 {
     public override ItemResponse FromEntity(ToDoItem e) => new()
     {

@@ -4,7 +4,7 @@ using NotesWeb.Data;
 
 namespace NotesWeb.Features.ToDo.ToDoItems.GetListItems;
 
-public class GetListItemsEndpoint(NoteBoardDBContext dbContext, TimeProvider timeProvider) : ItemBaseEndpoint<Request, Response, Mapper>(dbContext)
+public class GetListItemsEndpoint(NoteBoardDBContext dbContext, TimeProvider timeProvider) : ItemBaseEndpoint<Request, Response, ItemMapper<Request>>(dbContext)
 {
     private readonly TimeProvider _timeProvider = timeProvider;
 

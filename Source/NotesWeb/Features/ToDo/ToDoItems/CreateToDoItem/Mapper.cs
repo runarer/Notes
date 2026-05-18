@@ -3,7 +3,7 @@ using NotesWeb.Entities;
 
 namespace NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem;
 
-public class Mapper : Mapper<Request, Response, ToDoItem>
+public class Mapper : ItemMapper<Request>
 {
 
     public override ToDoItem ToEntity(Request r) => new()
@@ -14,15 +14,15 @@ public class Mapper : Mapper<Request, Response, ToDoItem>
         UserId = r.UserId,
         ParentListId = r.ListId
     };
-    public override Response FromEntity(ToDoItem e) => new()
-    {
-        ItemId = e.Id,
-        Title = e.Title,
-        Completed = e.Completed,
-        ParentListId = e.ParentListId,
-        CreatedAtUtc = e.CreatedAtUtc,
-        UpdatedAtUtc = e.UpdatedAtUtc,
-        Description = e.Description,
-        Due = e.Due
-    };
+    // public override Response FromEntity(ToDoItem e) => new()
+    // {
+    //     ItemId = e.Id,
+    //     Title = e.Title,
+    //     Completed = e.Completed,
+    //     ParentListId = e.ParentListId,
+    //     CreatedAtUtc = e.CreatedAtUtc,
+    //     UpdatedAtUtc = e.UpdatedAtUtc,
+    //     Description = e.Description,
+    //     Due = e.Due
+    // };
 }
