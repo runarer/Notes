@@ -16,11 +16,13 @@ public class Mapper : Mapper<Request, Response, ToDoItem>
     };
     public override Response FromEntity(ToDoItem e) => new()
     {
-        ItemId = e.ItemId,
+        ItemId = e.Id,
         Title = e.Title,
         Completed = e.Completed,
         ParentListId = e.ParentListId,
         CreatedAtUtc = e.CreatedAtUtc,
         UpdatedAtUtc = e.UpdatedAtUtc,
+        Description = e.Description,
+        Due = e.Due
     };
 }

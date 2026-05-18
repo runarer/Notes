@@ -41,7 +41,7 @@ public class MoveToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContext 
         // All is Ok, make the move
         var time = _timeProvider.GetUtcNow();
         fromList.UpdatedAtUtc = time;
-        todoItem.ParentListId = toList.ListId;
+        todoItem.ParentListId = toList.Id;
         todoItem.UpdatedAtUtc = time;
         toList.UpdatedAtUtc = time;
 

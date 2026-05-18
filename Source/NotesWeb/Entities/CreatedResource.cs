@@ -6,7 +6,7 @@ namespace NotesWeb.Entities;
 // to switch to a different database in the future if we want to.
 public class CreatedResource
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public DateTimeOffset CreatedAtUtc { get; set; }
     public DateTimeOffset UpdatedAtUtc { get; set; }

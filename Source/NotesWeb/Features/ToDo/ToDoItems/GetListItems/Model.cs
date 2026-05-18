@@ -27,7 +27,7 @@ public class Response
 
 public class Validator : Validator<Request>
 {
-    public Validator(TimeProvider timeProvider)
+    public Validator()
     {
         RuleFor(x => x.FromUtc)
             .LessThan(x => x.ToUtc)

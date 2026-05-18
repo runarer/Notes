@@ -24,7 +24,7 @@ public class RenameListEndpoint(TimeProvider timeProvider, NoteBoardDBContext db
 
     public async override Task HandleAsync(Request request, CancellationToken ct)
     {
-        var list = await _dbContext.ToDoLists.FirstOrDefaultAsync(list => list.ListId == request.ListId, ct);
+        var list = await _dbContext.ToDoLists.FirstOrDefaultAsync(list => list.Id == request.ListId, ct);
         if (list is null)
         {
             await Send.NotFoundAsync(ct);

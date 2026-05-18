@@ -18,7 +18,7 @@ public class UserPreProcessor : IPreProcessor<UserRequest>
 
         var dbContext = context.HttpContext.RequestServices.GetRequiredService<NoteBoardDBContext>();
         //Check if User exists
-        if (!await dbContext.Users.AnyAsync(user => user.UserId == userId, ct))
+        if (!await dbContext.Users.AnyAsync(user => user.Id == userId, ct))
             await context.HttpContext.Response.SendUnauthorizedAsync(ct);
 
     }

@@ -4,7 +4,7 @@ namespace NotesWeb.Entities;
 public class User : CreatedResource
 {
     // public int Id { get; set; }
-    public Guid UserId { get; set; }
+    // public Guid UserId { get; set; }
     public required string Username { get; set; }
     public required string Email { get; set; }
     public required string HashedPassword { get; set; }

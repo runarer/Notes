@@ -25,7 +25,11 @@ public class CreateToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
     {
         //Get list, check if it exists and that user owns it
         var todoList = await GetList(request.ListId, request, ct);
-        if (todoList is null) return;
+        if (todoList is null) return; //Error is handled in GetList, just return if it is null
+
+        // Check if Due date is in the past, execution ends here if so.
+        if (request.Due.HasValue && request.Due.Value < _timeProvider.GetUtcNow())
+            ThrowError(r => r.Due, "Due date cannot be in the past");
 
         // All is ok, create the item
         var todoItem = Map.ToEntity(request);

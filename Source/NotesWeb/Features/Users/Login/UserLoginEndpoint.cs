@@ -56,7 +56,7 @@ public class UserLoginEndpoint(NoteBoardDBContext dbContext, IPasswordHasher<Use
             o.SigningKey = jwtSecret; // get this secret from an external place
             o.ExpireAt = DateTime.UtcNow.AddDays(30);
             o.User.Roles.Add("User");
-            o.User.Claims.Add(("UserId", user.UserId.ToString()));
+            o.User.Claims.Add(("UserId", user.Id.ToString()));
         });
 
         await Send.OkAsync(new Response() { Token = jwtToken }, ct);
