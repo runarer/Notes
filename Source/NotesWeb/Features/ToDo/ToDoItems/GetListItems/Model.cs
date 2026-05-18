@@ -12,7 +12,7 @@ public class Request : UserRequest
 
 public class ResponseItem
 {
-    public Guid Id { get; set; }
+    public Guid ItemId { get; set; }
     public string Title { get; set; } = null!;
     public bool Completed { get; set; }
     public Guid ParentListId { get; set; }

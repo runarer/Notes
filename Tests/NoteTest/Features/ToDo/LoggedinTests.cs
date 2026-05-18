@@ -73,9 +73,9 @@ public class LoggedinTests(App app, LoginState state) : TestBase<App, LoginState
                 });
         Assert.Equal(HttpStatusCode.Created, rsp.StatusCode);
         Assert.NotNull(res);
-        Assert.NotEqual(default, res.Id);
+        Assert.NotEqual(default, res.ListId);
 
-        return res.Id;
+        return res.ListId;
     }
 
     protected async Task<Guid> CreateAnItemAsync(Guid listId, string title)
@@ -92,6 +92,6 @@ public class LoggedinTests(App app, LoginState state) : TestBase<App, LoginState
         Assert.Equal(HttpStatusCode.Created, rsp.StatusCode);
         Assert.NotNull(res);
 
-        return res.Id;
+        return res.ItemId;
     }
 }

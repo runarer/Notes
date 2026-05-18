@@ -7,7 +7,7 @@ public class Mapper : Mapper<Request, Response, ToDoItem>
 {
     public override Response FromEntity(ToDoItem e) => new()
     {
-        Id = e.Id,
+        ItemId = e.ItemId,
         Title = e.Title,
         Completed = e.Completed,
         ParentListId = e.ParentListId,

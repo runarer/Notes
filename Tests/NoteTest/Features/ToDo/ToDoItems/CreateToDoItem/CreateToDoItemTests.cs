@@ -29,7 +29,7 @@ public class CreateToDoItemTests(App App, LoginState State) : LoggedinTests(App,
 
         Assert.Equal(_validRequest.Title, res.Title);
         Assert.Equal(listId, res.ParentListId);
-        Assert.NotEqual(default, res.Id);
+        Assert.NotEqual(default, res.ItemId);
         Assert.Equal(fakeTime, res.CreatedAtUtc);
         Assert.Equal(res.CreatedAtUtc, res.UpdatedAtUtc);
 

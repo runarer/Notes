@@ -7,7 +7,7 @@ public class Mapper : Mapper<Request, ResponseItem, ToDoList>
 {
     public override ResponseItem FromEntity(ToDoList e) => new()
     {
-        Id = e.Id,
+        ListId = e.ListId,
         Title = e.Title,
         CreatedAtUtc = e.CreatedAtUtc,
         UpdatedAtUtc = e.UpdatedAtUtc,

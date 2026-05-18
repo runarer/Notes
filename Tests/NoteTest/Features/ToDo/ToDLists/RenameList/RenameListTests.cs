@@ -29,7 +29,7 @@ public class RenameListTests(App App, LoginState State) : LoggedinTests(App, Sta
         Assert.NotNull(res);
 
         Assert.Equal(validRequest.Title, res.Title);
-        Assert.NotEqual(default, res.Id);
+        Assert.NotEqual(default, res.ListId);
         Assert.Equal(fakeTime, res.UpdatedAtUtc);
     }
 

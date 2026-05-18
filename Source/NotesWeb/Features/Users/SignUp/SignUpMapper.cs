@@ -16,7 +16,7 @@ public class SignUpMapper : Mapper<Request, Response, User>
 
     public override Response FromEntity(User e) => new()
     {
-        Id = e.Id,
+        UserId = e.UserId,
         FullName = e.FullName,
         Username = e.Username,
         Email = e.Email,

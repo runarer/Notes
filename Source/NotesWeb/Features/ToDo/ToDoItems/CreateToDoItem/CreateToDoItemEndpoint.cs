@@ -16,7 +16,7 @@ public class CreateToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
         Claims("UserId");
         Summary(s =>
         {
-            s.Summary = "Creaete an item";
+            s.Summary = "Create an item";
             s.Description = "Creates an item with title, it is set to uncompleted by default.";
         });
     }
@@ -32,6 +32,9 @@ public class CreateToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
         todoItem.CreatedAtUtc = _timeProvider.GetUtcNow();
         todoItem.UpdatedAtUtc = todoItem.CreatedAtUtc;
         todoList.UpdatedAtUtc = todoItem.CreatedAtUtc;
+
+        todoItem.UserId = request.UserId;
+        todoItem.ParentListId = request.ListId;
 
         await Repo.ToDoItems.AddAsync(todoItem, ct);
         await Repo.SaveChangesAsync(ct);

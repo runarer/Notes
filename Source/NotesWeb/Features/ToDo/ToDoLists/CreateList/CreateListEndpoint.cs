@@ -30,6 +30,8 @@ public class CreateListEndpoint(TimeProvider timeProvider, NoteBoardDBContext db
         todoList.CreatedAtUtc = _timeProvider.GetUtcNow();
         todoList.UpdatedAtUtc = todoList.CreatedAtUtc;
 
+        todoList.UserId = request.UserId;
+
         await _dbContext.ToDoLists.AddAsync(todoList, ct);
         await _dbContext.SaveChangesAsync(ct);
 

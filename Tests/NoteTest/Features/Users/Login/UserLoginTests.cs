@@ -11,7 +11,7 @@ public sealed class LoginState : StateFixture
 
 public class UserLoginTests(App App, LoginState State) : TestBase<App, LoginState>, IAsyncLifetime
 {
-    private Request _validLoginRequest = new()
+    private readonly Request _validLoginRequest = new()
     {
         Email = "test@example.com",
         Password = "Testing123",
@@ -33,7 +33,7 @@ public class UserLoginTests(App App, LoginState State) : TestBase<App, LoginStat
 
         if (!State.SignedUp)
         {
-            var (rsp, res) = await App.Client.POSTAsync<NotesWeb.Features.Users.SignUp.SignUpEndpoint, NotesWeb.Features.Users.SignUp.Request, NotesWeb.Features.Users.SignUp.Response>(user);
+            var (rsp, _) = await App.Client.POSTAsync<NotesWeb.Features.Users.SignUp.SignUpEndpoint, NotesWeb.Features.Users.SignUp.Request, NotesWeb.Features.Users.SignUp.Response>(user);
             // Make sure success
             Assert.Equal(HttpStatusCode.Created, rsp.StatusCode);
             State.SignedUp = true;

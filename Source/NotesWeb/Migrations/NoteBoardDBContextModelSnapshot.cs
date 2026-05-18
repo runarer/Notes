@@ -24,9 +24,11 @@ namespace NotesWeb.Migrations
 
             modelBuilder.Entity("NotesWeb.Entities.ToDoItem", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Completed")
                         .HasColumnType("boolean");
@@ -40,6 +42,9 @@ namespace NotesWeb.Migrations
                     b.Property<DateTimeOffset?>("Due")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("ParentListId")
                         .HasColumnType("uuid");
 
@@ -50,8 +55,8 @@ namespace NotesWeb.Migrations
                     b.Property<DateTimeOffset>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -60,9 +65,11 @@ namespace NotesWeb.Migrations
 
             modelBuilder.Entity("NotesWeb.Entities.ToDoList", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTimeOffset>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone");
@@ -77,8 +84,8 @@ namespace NotesWeb.Migrations
                     b.Property<DateTimeOffset>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -109,6 +116,9 @@ namespace NotesWeb.Migrations
 
                     b.Property<DateTimeOffset>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Username")
                         .IsRequired()

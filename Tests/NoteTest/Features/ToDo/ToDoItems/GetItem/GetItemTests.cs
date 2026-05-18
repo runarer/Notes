@@ -31,7 +31,7 @@ public class GetItemTests(App App, LoginState State) : LoggedinTests(App, State)
         var (rsp, res) = await App.Client.GETAsync<GetItemEndpoint, Request, Response>(
             new Request
             {
-                ItemId = resPost.Id
+                ItemId = resPost.ItemId
             });
 
 

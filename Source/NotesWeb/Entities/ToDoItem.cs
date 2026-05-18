@@ -4,7 +4,7 @@ namespace NotesWeb.Entities;
 public class ToDoItem : OwnedResource
 {
     // public Guid Id { get; set; }
-    // public Guid Id { get; set; }
+    public Guid ItemId { get; set; }
     public required string Title { get; set; }
     public bool Completed { get; set; }
     public DateTimeOffset? Due { get; set; }

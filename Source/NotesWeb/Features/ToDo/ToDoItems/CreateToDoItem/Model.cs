@@ -7,11 +7,14 @@ public class Request : UserRequest
 
     public string Title { get; set; } = null!;
 
+    public string? Description { get; set; }
+    public DateTimeOffset? Due { get; set; }
+
 }
 
 public class Response
 {
-    public Guid Id { get; set; }
+    public Guid ItemId { get; set; }
     public string Title { get; set; } = null!;
     public bool Completed { get; set; }
     public Guid ParentListId { get; set; }

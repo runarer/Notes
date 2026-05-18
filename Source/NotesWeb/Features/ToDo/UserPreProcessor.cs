@@ -12,13 +12,13 @@ public class UserPreProcessor : IPreProcessor<UserRequest>
     {
         // Get user id from claims, this makes the preprocessor independent
         var userIdClaim = context.HttpContext.User.ClaimValue("UserId");
-        int userId = default;
-        if (userIdClaim is null || !int.TryParse(userIdClaim, out userId))
+        Guid userId = default;
+        if (userIdClaim is null || !Guid.TryParse(userIdClaim, out userId))
             await context.HttpContext.Response.SendUnauthorizedAsync(ct);
 
         var dbContext = context.HttpContext.RequestServices.GetRequiredService<NoteBoardDBContext>();
         //Check if User exists
-        if (!await dbContext.Users.AnyAsync(user => user.Id == userId, ct))
+        if (!await dbContext.Users.AnyAsync(user => user.UserId == userId, ct))
             await context.HttpContext.Response.SendUnauthorizedAsync(ct);
 
     }
