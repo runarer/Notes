@@ -1,42 +1,51 @@
 
 using System.Net;
-using NotesWeb.Features.ToDo.ToDoItems.RenameToDoItem;
+using NotesWeb.Features.ToDo.ToDoItems.EditToDoItem;
 
-namespace NoteTest.Features.ToDo.ToDoItems.RenameToDoItem;
+namespace NoteTest.Features.ToDo.ToDoItems.EditToDoItem;
 
-public class RenameToDoItemTests(App App, LoginState State) : LoggedinTests(App, State)
+public class EditToDoItemTests(App App, LoginState State) : LoggedinTests(App, State)
 {
 
-    [Fact, Priority(1)]
-    public async Task RenameToDoItem_CreateAnItemRenameIt_ItemIsRenamed()
+    [Fact]
+    public async Task EditToDoItem_EditAnItem_ItemIsEdited()
     {
         await SetTokenAsync();
         // Create first list
         var list = await CreateAListAsync("First List");
 
         // Create item in first list
-        var itemId = await CreateAnItemAsync(list, "Item to move");
+        var itemId = await CreateAnItemAsync(list, "Item to edit");
 
         var newTitle = "New title";
+        var newDescription = "New description";
+        var newDue = DateTimeOffset.UtcNow.AddDays(1);
         var request = new Request
         {
             ItemId = itemId,
-            Title = newTitle
+            Title = newTitle,
+            Description = newDescription,
+            Due = newDue
         };
 
-        // Rename item
-        var (rsp, res) = await App.Client.PATCHAsync<RenameToDoItemEndpoint, Request, Response>(request);
+        // Edit item
+        var (rsp, res) = await App.Client.PATCHAsync<EditToDoItemEndpoint, Request, Response>(request);
 
-        // Assert item is now renamed
+        // Assert item is now edited
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
+        Assert.NotNull(res);
         Assert.Equal(newTitle, res.Title);
+        Assert.NotNull(res.Description);
+        Assert.Equal(newDescription, res.Description);
+        Assert.NotNull(res.Due);
+        Assert.Equal(newDue, res.Due);
     }
 
-    [Theory, Priority(2)]
+    [Theory]
     [InlineData("", "You need to provide a title")]
     [InlineData("s", "Title is to short")]
     [InlineData("ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss", "Title is to long")]
-    public async Task RenameToDoItem_CreateAnItemRenameItWithInvalidTitles_ReturnsProblemDetailsWithErrorMessage(string title, string error)
+    public async Task EditToDoItem_CreateAnItemEditItWithInvalidTitles_ReturnsProblemDetailsWithErrorMessage(string title, string error)
     {
 
         await SetTokenAsync();
@@ -48,8 +57,8 @@ public class RenameToDoItemTests(App App, LoginState State) : LoggedinTests(App,
         // Create item in first list
         var itemId = await CreateAnItemAsync(list, "Item to move");
 
-        // Rename item
-        var (rsp, res) = await App.Client.PATCHAsync<RenameToDoItemEndpoint, Request, ProblemDetails>(
+        // Edit item
+        var (rsp, res) = await App.Client.PATCHAsync<EditToDoItemEndpoint, Request, ProblemDetails>(
             new Request
             {
                 ItemId = itemId,
@@ -65,10 +74,10 @@ public class RenameToDoItemTests(App App, LoginState State) : LoggedinTests(App,
     }
 
     [Fact]
-    public async Task RenameToDoItem_ItemDoesNotExist_ReturnNotFound()
+    public async Task EditToDoItem_ItemDoesNotExist_ReturnNotFound()
     {
-        // Rename item
-        var (rsp, _) = await App.Client.PATCHAsync<RenameToDoItemEndpoint, Request, Response>(new Request
+        // Edit item
+        var (rsp, _) = await App.Client.PATCHAsync<EditToDoItemEndpoint, Request, Response>(new Request
         {
             ItemId = Guid.NewGuid(),
             Title = "Test"
