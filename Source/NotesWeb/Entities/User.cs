@@ -1,7 +1,7 @@
 
 namespace NotesWeb.Entities;
 
-public class User
+public class User //: CreatedResource
 {
     public int Id { get; set; }
     public required string Username { get; set; }

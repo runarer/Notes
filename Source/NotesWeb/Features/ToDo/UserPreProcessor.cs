@@ -12,7 +12,7 @@ public class UserPreProcessor : IPreProcessor<UserRequest>
     {
         // Get user id from claims, this makes the preprocessor independent
         var userIdClaim = context.HttpContext.User.ClaimValue("UserId");
-        int userId = 0;
+        int userId = default;
         if (userIdClaim is null || !int.TryParse(userIdClaim, out userId))
             await context.HttpContext.Response.SendUnauthorizedAsync(ct);
 
