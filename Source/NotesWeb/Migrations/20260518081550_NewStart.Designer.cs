@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NotesWeb.Migrations
 {
     [DbContext(typeof(NoteBoardDBContext))]
-    [Migration("20260518080055_NewStart")]
+    [Migration("20260518081550_NewStart")]
     partial class NewStart
     {
         /// <inheritdoc />
