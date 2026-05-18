@@ -1,7 +1,6 @@
 <Solution>
   <Folder Name="/Source/">
     <Project Path="Source/NotesWeb/NotesWeb.csproj" />
-    <Project Path="Source/TodoFrontend/TodoFrontend.csproj" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="Tests/NoteTest/NoteTest.csproj" />
