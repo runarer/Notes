@@ -5,13 +5,3 @@ public class Request : UserRequest
 {
     public Guid ItemId { get; set; }
 }
-
-public class Response
-{
-    public Guid ItemId { get; set; }
-    public string Title { get; set; } = null!;
-    public bool Completed { get; set; }
-    public Guid ParentListId { get; set; }
-    public DateTimeOffset CreatedAtUtc { get; set; }
-    public DateTimeOffset UpdatedAtUtc { get; set; }
-}

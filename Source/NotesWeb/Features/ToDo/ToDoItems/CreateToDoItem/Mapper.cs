@@ -14,15 +14,4 @@ public class Mapper : ItemMapper<Request>
         UserId = r.UserId,
         ParentListId = r.ListId
     };
-    // public override Response FromEntity(ToDoItem e) => new()
-    // {
-    //     ItemId = e.Id,
-    //     Title = e.Title,
-    //     Completed = e.Completed,
-    //     ParentListId = e.ParentListId,
-    //     CreatedAtUtc = e.CreatedAtUtc,
-    //     UpdatedAtUtc = e.UpdatedAtUtc,
-    //     Description = e.Description,
-    //     Due = e.Due
-    // };
 }

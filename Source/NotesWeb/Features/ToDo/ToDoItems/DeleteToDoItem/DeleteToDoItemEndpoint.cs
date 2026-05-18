@@ -38,7 +38,7 @@ public class DeleteToDoItemEndpoint(TimeProvider timeProvider, NoteBoardDBContex
         todoList.UpdatedAtUtc = _timeProvider.GetUtcNow();
         await Repo.ToDoItems.Where(item => item.Id == request.ItemId).ExecuteDeleteAsync(ct);
 
-        // todoList.UpdatedAtUtc = _timeProvider.GetUtcNow();
+        todoList.UpdatedAtUtc = _timeProvider.GetUtcNow();
         await Repo.SaveChangesAsync(ct);
 
         await Send.NoContentAsync(cancellation: ct);

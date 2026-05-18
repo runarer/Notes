@@ -10,19 +10,8 @@ public class Request : UserRequest
     public DateTimeOffset? ToUtc { get; set; }
 }
 
-public class ResponseItem
-{
-    public Guid ItemId { get; set; }
-    public string Title { get; set; } = null!;
-    public bool Completed { get; set; }
-    public Guid ParentListId { get; set; }
-    public DateTimeOffset CreatedAtUtc { get; set; }
-    public DateTimeOffset UpdatedAtUtc { get; set; }
-}
-
 public class Response
 {
-    // public ResponseItem[] List { get; set; } = [];
     public ItemResponse[] List { get; set; } = [];
 }
 
