@@ -1,16 +1,16 @@
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
+using NotesWeb.Data.Interfaces;
 using NotesWeb.Entities;
 
 namespace NotesWeb.Data;
 
-public class NoteBoardDBContext(DbContextOptions<NoteBoardDBContext> options) : DbContext(options)
+public class NoteBoardDBContext(DbContextOptions<NoteBoardDBContext> options) : DbContext(options), IUserAccess
 {
     public DbSet<User> Users { get; set; }
     public DbSet<ToDoItem> ToDoItems { get; set; }
     public DbSet<ToDoList> ToDoLists { get; set; }
-    // public DbSet<Notes> Notes {get; set;}
+
 
 
     // protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,4 +32,22 @@ public class NoteBoardDBContext(DbContextOptions<NoteBoardDBContext> options) : 
     //     .HasValueGenerator<SequentialGuidValueGenerator>();
     // }
 
+    //* Interface implementasions, these can be splitt into partial classes or its own classes
+    //* with this class injected.
+
+    //* User access */
+    public async Task<bool> UsernameTakenAsync(string username) =>
+        await Users.AnyAsync(user => user.Username == username);
+
+    public async Task<bool> EmailTakenAsync(string email) =>
+        await Users.AnyAsync(user => user.Email == email);
+
+    public async Task CreateUserAsync(User user) =>
+        await Users.AddAsync(user);
+
+    public async Task<User?> TryFindByIdAsync(Guid id) =>
+        await Users.FindAsync(id);
+
+    public async Task<User?> TryFindUserByEmailAsync(string email) =>
+        await Users.FirstOrDefaultAsync(user => user.Email == email);
 }
