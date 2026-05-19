@@ -1,12 +1,11 @@
 
-using Microsoft.EntityFrameworkCore;
-using NotesWeb.Data;
+using NotesWeb.Data.Interfaces;
 
 namespace NotesWeb.Features.ToDo.ToDoLists.RenameList;
 
-public class RenameListEndpoint(TimeProvider timeProvider, NoteBoardDBContext dbContext) : Endpoint<Request, Response, Mapper>
+public class RenameListEndpoint(TimeProvider timeProvider, IToDoListAccess listRepository) : Endpoint<Request, Response, Mapper>
 {
-    private readonly NoteBoardDBContext _dbContext = dbContext;
+    private readonly IToDoListAccess _listRepository = listRepository;
     private readonly TimeProvider _timeProvider = timeProvider;
     public override void Configure()
     {
@@ -24,21 +23,29 @@ public class RenameListEndpoint(TimeProvider timeProvider, NoteBoardDBContext db
 
     public async override Task HandleAsync(Request request, CancellationToken ct)
     {
-        var list = await _dbContext.ToDoLists.FirstOrDefaultAsync(list => list.Id == request.ListId, ct);
+        // Check if list exist
+        var list = await _listRepository.TryFindToDoListByIdAsync(request.ListId, ct);
+
         if (list is null)
         {
             await Send.NotFoundAsync(ct);
+            return;
         }
-        else
+
+        // Check if list is owned
+        if (list.UserId != request.UserId)
         {
-            list!.Title = request.Title;
-            list.UpdatedAtUtc = _timeProvider.GetUtcNow();
-
-            await _dbContext.SaveChangesAsync(ct);
-
-            var response = Map.FromEntity(list);
-            await Send.OkAsync(response, ct);
+            await Send.ForbiddenAsync(ct);
+            return;
         }
+
+        list!.Title = request.Title;
+        list.UpdatedAtUtc = _timeProvider.GetUtcNow();
+
+        await _listRepository.SaveChangesAsync(ct);
+
+        var response = Map.FromEntity(list);
+        await Send.OkAsync(response, ct);
     }
 
 }
