@@ -1,10 +1,7 @@
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
-// using Microsoft.EntityFrameworkCore;
 using NotesWeb.Data;
-using NotesWeb.Data.Interfaces;
 using NotesWeb.Entities;
 
 namespace NotesWeb.Features.Users.SignUp;
@@ -31,16 +28,19 @@ public class SignUpEndpoint(TimeProvider timeProvider, NoteBoardDBContext dbCont
     {
         User user = Map.ToEntity(request);
 
+        // is username taken
         bool userExists = await _dbContext.Users.AnyAsync(user => user.Username == request.Username, ct);
         if (userExists)
             AddError(r => r.Username, "this username is taken!");
 
+        // is email used
         bool emailTaken = await _dbContext.Users.AnyAsync(user => user.Email == request.Email, ct);
         if (emailTaken)
             AddError(r => r.Email, "this email is already used!");
 
         ThrowIfAnyErrors();
 
+        // All ok, create and return user
         user.HashedPassword = _passwordHasher.HashPassword(user, user.HashedPassword);
         user.CreatedAtUtc = _timeProvider.GetUtcNow();
         user.UpdatedAtUtc = user.CreatedAtUtc;

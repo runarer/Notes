@@ -26,6 +26,7 @@ public class UserLoginEndpoint(NoteBoardDBContext dbContext, IPasswordHasher<Use
 
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
+        // Get user
         User? user = await _dbContext.Users.FirstOrDefaultAsync(user => user.Email == request.Email, ct);
         if (user is null)
         {

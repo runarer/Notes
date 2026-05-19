@@ -4,6 +4,8 @@ using NotesWeb.Entities;
 
 namespace NotesWeb.Features.ToDo.ToDoItems;
 
+// These classes contain code for checking if list or items exist and if they are owned by the user.
+// Most endpoints for items require this code and can expand one of these classes.
 public class ItemBaseEndpoint<TReq, TRes, TMapper>(NoteBoardDBContext dbContext) : Endpoint<TReq, TRes, TMapper>
     where TReq : notnull
     where TRes : notnull
@@ -20,7 +22,7 @@ public class ItemBaseEndpoint<TReq, TRes, TMapper>(NoteBoardDBContext dbContext)
             await Send.NotFoundAsync(ct);
             return null;
         }
-        else if (todoList.UserId != request.UserId)
+        if (todoList.UserId != request.UserId)
         {
             await Send.ForbiddenAsync(ct);
             return null;
@@ -37,7 +39,7 @@ public class ItemBaseEndpoint<TReq, TRes, TMapper>(NoteBoardDBContext dbContext)
             await Send.NotFoundAsync(ct);
             return null;
         }
-        else if (todoItem.UserId != request.UserId)
+        if (todoItem.UserId != request.UserId)
         {
             await Send.ForbiddenAsync(ct);
             return null;
@@ -60,7 +62,7 @@ public class ItemBaseEndpoint<TReq>(NoteBoardDBContext dbContext) : Endpoint<TRe
             await Send.NotFoundAsync(ct);
             return null;
         }
-        else if (todoList.UserId != request.UserId)
+        if (todoList.UserId != request.UserId)
         {
             await Send.ForbiddenAsync(ct);
             return null;
@@ -77,7 +79,7 @@ public class ItemBaseEndpoint<TReq>(NoteBoardDBContext dbContext) : Endpoint<TRe
             await Send.NotFoundAsync(ct);
             return null;
         }
-        else if (todoItem.UserId != request.UserId)
+        if (todoItem.UserId != request.UserId)
         {
             await Send.ForbiddenAsync(ct);
             return null;
