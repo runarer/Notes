@@ -10,7 +10,7 @@ public class UserPreProcessor : IPreProcessor<UserRequest>
 {
     public async Task PreProcessAsync(IPreProcessorContext<UserRequest> context, CancellationToken ct)
     {
-        // Get user id from claims, this makes the preprocessor independent
+        // Get user id from claims, this makes the preprocessor independent of requests
         var userIdClaim = context.HttpContext.User.ClaimValue("UserId");
         Guid userId = default;
         if (userIdClaim is null || !Guid.TryParse(userIdClaim, out userId))
