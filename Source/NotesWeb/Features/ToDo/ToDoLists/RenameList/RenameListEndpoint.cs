@@ -1,11 +1,11 @@
 
-using NotesWeb.Data.Interfaces;
+using NotesWeb.Data;
 
 namespace NotesWeb.Features.ToDo.ToDoLists.RenameList;
 
-public class RenameListEndpoint(TimeProvider timeProvider, IToDoListAccess listRepository) : Endpoint<Request, Response, Mapper>
+public class RenameListEndpoint(TimeProvider timeProvider, NoteBoardDBContext dbContext) : Endpoint<Request, Response, Mapper>
 {
-    private readonly IToDoListAccess _listRepository = listRepository;
+    private readonly NoteBoardDBContext _dbContext = dbContext;
     private readonly TimeProvider _timeProvider = timeProvider;
     public override void Configure()
     {
@@ -24,7 +24,7 @@ public class RenameListEndpoint(TimeProvider timeProvider, IToDoListAccess listR
     public async override Task HandleAsync(Request request, CancellationToken ct)
     {
         // Check if list exist
-        var list = await _listRepository.TryFindToDoListByIdAsync(request.ListId, ct);
+        var list = await _dbContext.ToDoLists.FindAsync([request.ListId], ct);
 
         if (list is null)
         {
@@ -42,10 +42,11 @@ public class RenameListEndpoint(TimeProvider timeProvider, IToDoListAccess listR
         list!.Title = request.Title;
         list.UpdatedAtUtc = _timeProvider.GetUtcNow();
 
-        await _listRepository.SaveChangesAsync(ct);
+        await _dbContext.SaveChangesAsync(ct);
 
         var response = Map.FromEntity(list);
         await Send.OkAsync(response, ct);
+
     }
 
 }
