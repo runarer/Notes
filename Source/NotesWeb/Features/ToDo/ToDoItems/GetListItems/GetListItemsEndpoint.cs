@@ -17,7 +17,7 @@ public class GetListItemsEndpoint(NoteBoardDBContext dbContext, TimeProvider tim
         Summary(s =>
         {
             s.Summary = "Get list of items in a list";
-            s.Description = "This returns a list of the item in a list, can filter on searchterm, completed and time";
+            s.Description = "This returns a list of the item in a list, can filter on searchterm (title and description), completed, due time and update time.";
         });
     }
 
@@ -33,18 +33,26 @@ public class GetListItemsEndpoint(NoteBoardDBContext dbContext, TimeProvider tim
         var listQuery = Repo.ToDoItems.Where(list => list.ParentListId == request.ListId);
 
         if (!string.IsNullOrWhiteSpace(request.Search))
-            listQuery = listQuery.Where(list => list.Title.Contains(request.Search));
+            listQuery = listQuery.Where(item =>
+                item.Title.Contains(request.Search) ||
+                item.Description != null && item.Description.Contains(request.Search));
 
         if (request.Completed is not null)
-            listQuery = listQuery.Where(list => list.Completed == request.Completed);
+            listQuery = listQuery.Where(item => item.Completed == request.Completed);
 
         if (request.FromUtc is not null)
-            listQuery = listQuery.Where(list => list.UpdatedAtUtc >= request.FromUtc);
+            listQuery = listQuery.Where(item => item.UpdatedAtUtc >= request.FromUtc);
 
         if (request.ToUtc is not null)
-            listQuery = listQuery.Where(list => list.UpdatedAtUtc <= request.ToUtc);
+            listQuery = listQuery.Where(item => item.UpdatedAtUtc <= request.ToUtc);
 
-        var responseList = await listQuery.Select(list => Map.FromEntity(list)).ToArrayAsync(ct);
+        if (request.DueFromUtc is not null)
+            listQuery = listQuery.Where(item => item.Due >= request.DueFromUtc);
+
+        if (request.DueToUtc is not null)
+            listQuery = listQuery.Where(item => item.Due <= request.DueToUtc);
+
+        var responseList = await listQuery.Select(item => Map.FromEntity(item)).ToArrayAsync(ct);
 
         await Send.OkAsync(new Response { List = responseList }, ct);
     }
