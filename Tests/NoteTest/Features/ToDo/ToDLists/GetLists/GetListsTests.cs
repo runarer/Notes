@@ -93,13 +93,14 @@ public class GetListsTests(App App, LoginState State) : LoggedinTests(App, State
         await SetTokenAsync();
 
         var searchTerm = "abcdefg";
-        await PostLists(["test 1" + searchTerm, searchTerm + " test 2"]);
+        await PostLists(["test 1" + searchTerm, searchTerm + " test 2", "No search term"]);
 
         var (rsp, res) = await App.Client.GETAsync<GetListsEndpoint, Request, Response>(new Request { Search = searchTerm });
 
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
         Assert.NotNull(res);
 
+        Assert.Equal(2, res.Lists.Length);
         Assert.All(res.Lists, list => list.Title.Contains(searchTerm));
     }
 

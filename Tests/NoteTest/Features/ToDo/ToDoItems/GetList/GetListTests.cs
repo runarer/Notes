@@ -1,5 +1,6 @@
 
 using System.Net;
+using NotesWeb.Features.ToDo.ToDoItems;
 using NotesWeb.Features.ToDo.ToDoItems.GetListItems;
 
 namespace NoteTest.Features.ToDo.ToDoItems.GetList;
@@ -75,25 +76,39 @@ public class GetListTests(App App, LoginState State) : LoggedinTests(App, State)
         var listId = await CreateAListAsync("List for testing GetList");
         var searchTerm = "asdf";
         // Add several items
-        string[] items = [
-            "Test item 1",
-            searchTerm + " Test item 2",
-            "Test" + searchTerm + "item 3",
-            "Test item 4 " + searchTerm ];
+
+        NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request[] items = [
+                new() {ListId = listId,Title = "Test item 1"},
+                new() {ListId = listId,Title = searchTerm+"Test item 2"},
+                new() {ListId = listId,Title = "Test item 3", Description ="Some text"+searchTerm},
+                new() {ListId = listId,Title = "Test item 4"+searchTerm},
+                new() {ListId = listId,Title = "Test item 5", Description ="Some text"},
+
+            ];
         foreach (var item in items)
-            _ = await CreateAnItemAsync(listId, item);
+            _ = await CreateAnItemAsync(item);
 
 
         // Get list
         var (rsp, res) = await App.Client.GETAsync<GetListItemsEndpoint, Request, Response>(new Request
         {
-            ListId = listId
+            ListId = listId,
+            Search = searchTerm,
+
         });
 
 
         // Assert all items has searchTerm
-        Assert.All(res.List, list => list.Title.Contains(searchTerm));
+        Assert.Equal(3, res.List.Length);
+        Assert.All(res.List, list =>
+        {
+            Assert.True(
+                list.Title.Contains(searchTerm) ||
+                (list.Description is not null && list.Description.Contains(searchTerm)));
+        });
+
     }
+
 
     [Fact]
     public async Task GetListsItems_GetListOfItemsWithToDateBeforeFromDate_ReturnsProblemDetails()
@@ -111,6 +126,33 @@ public class GetListTests(App App, LoginState State) : LoggedinTests(App, State)
                 ListId = listId,
                 FromUtc = App.FakeTime.GetUtcNow().AddDays(-10),
                 ToUtc = App.FakeTime.GetUtcNow().AddDays(-12)
+            });
+
+        Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
+        Assert.NotNull(res);
+
+        Assert.Single(res.Errors);
+        Assert.Equivalent(expected, res.Errors.Select(e => (e.Name, e.Reason)));
+
+    }
+
+
+    [Fact]
+    public async Task GetListsItems_GetListOfItemsWithDueToDateBeforeDueFromDate_ReturnsProblemDetails()
+    {
+        var expected = new[] {
+            ("dueFromUtc", "'due From Utc' must be after 'Due To Utc'.")};
+
+        await SetTokenAsync();
+
+        var listId = await CreateAListAsync("Testing time error response");
+
+        var (rsp, res) = await App.Client.GETAsync<GetListItemsEndpoint, Request, ProblemDetails>(
+            new Request
+            {
+                ListId = listId,
+                DueFromUtc = App.FakeTime.GetUtcNow().AddDays(10),
+                DueToUtc = App.FakeTime.GetUtcNow().AddDays(8)
             });
 
         Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
