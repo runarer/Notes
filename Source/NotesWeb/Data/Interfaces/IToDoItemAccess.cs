@@ -4,6 +4,6 @@ namespace NotesWeb.Data.Interfaces;
 
 public interface IToDoItemAccess : IDataAccess
 {
-    Task<ToDoItem?> TryFindToDoItemById(Guid id);
-    Task AddToDoItemAsync(ToDoList list);
+    Task<ToDoItem?> TryFindToDoItemByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task AddToDoItemAsync(ToDoList list, CancellationToken cancellationToken);
 }

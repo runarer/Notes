@@ -31,12 +31,12 @@ public class SignUpEndpoint(TimeProvider timeProvider, IUserAccess dbContext, IP
         User user = Map.ToEntity(request);
 
         // bool userExists = await _dbContext.Users.AnyAsync(user => user.Username == request.Username, ct);
-        bool userExists = await _dbContext.UsernameTakenAsync(user.Username);
+        bool userExists = await _dbContext.UsernameTakenAsync(user.Username, ct);
         if (userExists)
             AddError(r => r.Username, "this username is taken!");
 
         // bool emailTaken = await _dbContext.Users.AnyAsync(user => user.Email == request.Email, ct);
-        bool emailTaken = await _dbContext.EmailTakenAsync(user.Email);
+        bool emailTaken = await _dbContext.EmailTakenAsync(user.Email, ct);
         if (emailTaken)
             AddError(r => r.Email, "this email is already used!");
 
@@ -47,7 +47,7 @@ public class SignUpEndpoint(TimeProvider timeProvider, IUserAccess dbContext, IP
         user.UpdatedAtUtc = user.CreatedAtUtc;
 
         // await _dbContext.Users.AddAsync(user, ct);
-        await _dbContext.AddUserAsync(user);
+        await _dbContext.AddUserAsync(user, ct);
         await _dbContext.SaveChangesAsync(ct);
 
         var response = Map.FromEntity(user);
