@@ -56,10 +56,16 @@ public class NoteBoardDBContext(DbContextOptions<NoteBoardDBContext> options) : 
 
 
     //* List Access */
-    public async Task<ToDoList?> TryFindToDoListById(Guid id) =>
+    public async Task<ToDoList?> TryFindToDoListByIdAsync(Guid id) =>
         await ToDoLists.FindAsync(id);
+
+    public async Task AddToDoListAsync(ToDoList list) =>
+        await ToDoLists.AddAsync(list);
 
     //* Item Access */
     public async Task<ToDoItem?> TryFindToDoItemById(Guid id) =>
         await ToDoItems.FindAsync(id);
+
+    public async Task AddToDoItemAsync(ToDoList list) =>
+        await ToDoLists.AddAsync(list);
 }
