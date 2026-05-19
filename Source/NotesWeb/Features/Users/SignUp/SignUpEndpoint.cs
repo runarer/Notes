@@ -47,7 +47,7 @@ public class SignUpEndpoint(TimeProvider timeProvider, IUserAccess dbContext, IP
         user.UpdatedAtUtc = user.CreatedAtUtc;
 
         // await _dbContext.Users.AddAsync(user, ct);
-        await _dbContext.CreateUserAsync(user);
+        await _dbContext.AddUserAsync(user);
         await _dbContext.SaveChangesAsync(ct);
 
         var response = Map.FromEntity(user);

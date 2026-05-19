@@ -45,7 +45,7 @@ public class NoteBoardDBContext(DbContextOptions<NoteBoardDBContext> options) : 
     public async Task<bool> EmailTakenAsync(string email) =>
         await Users.AnyAsync(user => user.Email == email);
 
-    public async Task CreateUserAsync(User user) =>
+    public async Task AddUserAsync(User user) =>
         await Users.AddAsync(user);
 
     public async Task<User?> TryFindByIdAsync(Guid id) =>
