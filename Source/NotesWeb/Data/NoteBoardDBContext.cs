@@ -1,14 +1,10 @@
 
 using Microsoft.EntityFrameworkCore;
-using NotesWeb.Data.Interfaces;
 using NotesWeb.Entities;
 
 namespace NotesWeb.Data;
 
-public class NoteBoardDBContext(DbContextOptions<NoteBoardDBContext> options) : DbContext(options),
-    IUserAccess,
-    IToDoListAccess,
-    IToDoItemAccess
+public class NoteBoardDBContext(DbContextOptions<NoteBoardDBContext> options) : DbContext(options)
 {
     public DbSet<User> Users { get; set; }
     public DbSet<ToDoItem> ToDoItems { get; set; }
@@ -41,33 +37,33 @@ public class NoteBoardDBContext(DbContextOptions<NoteBoardDBContext> options) : 
     // Note TryFind methods need to pass lists for cancellationToken to work.
 
     //* User access */
-    public async Task<bool> UsernameTakenAsync(string username, CancellationToken cancellationToken) =>
-        await Users.AnyAsync(user => user.Username == username, cancellationToken);
+    // public async Task<bool> UsernameTakenAsync(string username, CancellationToken cancellationToken) =>
+    //     await Users.AnyAsync(user => user.Username == username, cancellationToken);
 
-    public async Task<bool> EmailTakenAsync(string email, CancellationToken cancellationToken) =>
-        await Users.AnyAsync(user => user.Email == email, cancellationToken);
+    // public async Task<bool> EmailTakenAsync(string email, CancellationToken cancellationToken) =>
+    //     await Users.AnyAsync(user => user.Email == email, cancellationToken);
 
-    public async Task<User?> TryFindUserByEmailAsync(string email, CancellationToken cancellationToken) =>
-        await Users.FirstOrDefaultAsync(user => user.Email == email, cancellationToken);
+    // public async Task<User?> TryFindUserByEmailAsync(string email, CancellationToken cancellationToken) =>
+    //     await Users.FirstOrDefaultAsync(user => user.Email == email, cancellationToken);
 
-    public async Task AddUserAsync(User user, CancellationToken cancellationToken) =>
-        await Users.AddAsync(user, cancellationToken);
+    // public async Task AddUserAsync(User user, CancellationToken cancellationToken) =>
+    //     await Users.AddAsync(user, cancellationToken);
 
-    public async Task<User?> TryFindUserByIdAsync(Guid id, CancellationToken cancellationToken) =>
-        await Users.FindAsync([id], cancellationToken);
+    // public async Task<User?> TryFindUserByIdAsync(Guid id, CancellationToken cancellationToken) =>
+    //     await Users.FindAsync([id], cancellationToken);
 
-    //* List Access */
-    public async Task<ToDoList?> TryFindToDoListByIdAsync(Guid id, CancellationToken cancellationToken) =>
-        await ToDoLists.FirstOrDefaultAsync(list => list.Id == id, cancellationToken);
+    // //* List Access */
+    // public async Task<ToDoList?> TryFindToDoListByIdAsync(Guid id, CancellationToken cancellationToken) =>
+    //     await ToDoLists.FirstOrDefaultAsync(list => list.Id == id, cancellationToken);
 
-    public async Task AddToDoListAsync(ToDoList list, CancellationToken cancellationToken) =>
-        await ToDoLists.AddAsync(list, cancellationToken);
+    // public async Task AddToDoListAsync(ToDoList list, CancellationToken cancellationToken) =>
+    //     await ToDoLists.AddAsync(list, cancellationToken);
 
-    //* Item Access */
-    public async Task<ToDoItem?> TryFindToDoItemByIdAsync(Guid id, CancellationToken cancellationToken) =>
-        await ToDoItems.FirstOrDefaultAsync(item => item.Id == id, cancellationToken);
+    // //* Item Access */
+    // public async Task<ToDoItem?> TryFindToDoItemByIdAsync(Guid id, CancellationToken cancellationToken) =>
+    //     await ToDoItems.FirstOrDefaultAsync(item => item.Id == id, cancellationToken);
 
 
-    public async Task AddToDoItemAsync(ToDoList list, CancellationToken cancellationToken) =>
-        await ToDoLists.AddAsync(list, cancellationToken);
+    // public async Task AddToDoItemAsync(ToDoList list, CancellationToken cancellationToken) =>
+    //     await ToDoLists.AddAsync(list, cancellationToken);
 }

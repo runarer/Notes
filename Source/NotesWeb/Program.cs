@@ -12,7 +12,6 @@ using OpenTelemetry.Trace;
 using Microsoft.AspNetCore.HttpLogging;
 using OpenTelemetry.Metrics;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using NotesWeb.Data.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,9 +46,9 @@ builder.Services.AddDbContext<NoteBoardDBContext>(
     options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register services for accessing the data. Makes endpoints independent of efcore.
-builder.Services.AddScoped<IUserAccess, NoteBoardDBContext>();
-builder.Services.AddScoped<IToDoListAccess, NoteBoardDBContext>();
-builder.Services.AddScoped<IToDoItemAccess, NoteBoardDBContext>();
+// builder.Services.AddScoped<IUserAccess, NoteBoardDBContext>();
+// builder.Services.AddScoped<IToDoListAccess, NoteBoardDBContext>();
+// builder.Services.AddScoped<IToDoItemAccess, NoteBoardDBContext>();
 
 
 // Need timeprovider, also makes testing easier as it can be swapped with a fake one.

@@ -1,17 +1,15 @@
 
 using FastEndpoints.Security;
 using Microsoft.AspNetCore.Identity;
-// using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NotesWeb.Data;
-using NotesWeb.Data.Interfaces;
 using NotesWeb.Entities;
 
 namespace NotesWeb.Features.Users.Login;
 
-public class UserLoginEndpoint(IUserAccess dbContext, IPasswordHasher<User> passwordHasher) : Endpoint<Request, Response>
+public class UserLoginEndpoint(NoteBoardDBContext dbContext, IPasswordHasher<User> passwordHasher) : Endpoint<Request, Response>
 {
-    // private readonly NoteBoardDBContext _dbContext = dbContext;
-    private readonly IUserAccess _dbContext = dbContext;
+    private readonly NoteBoardDBContext _dbContext = dbContext;
     private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
 
     public override void Configure()
@@ -28,8 +26,7 @@ public class UserLoginEndpoint(IUserAccess dbContext, IPasswordHasher<User> pass
 
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
-        // User? user = await _dbContext.Users.FirstOrDefaultAsync(user => user.Email == request.Email, ct);
-        User? user = await _dbContext.TryFindUserByEmailAsync(request.Email, ct);
+        User? user = await _dbContext.Users.FirstOrDefaultAsync(user => user.Email == request.Email, ct);
         if (user is null)
         {
             await Send.UnauthorizedAsync(ct);
