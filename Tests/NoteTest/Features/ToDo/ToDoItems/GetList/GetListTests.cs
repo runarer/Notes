@@ -1,6 +1,5 @@
 
 using System.Net;
-using NotesWeb.Features.ToDo.ToDoItems;
 using NotesWeb.Features.ToDo.ToDoItems.GetListItems;
 
 namespace NoteTest.Features.ToDo.ToDoItems.GetList;
@@ -220,6 +219,40 @@ public class GetListTests(App App, LoginState State) : LoggedinTests(App, State)
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
         Assert.Single(res.List);
         Assert.Equal(items[0], res.List[0].Title);
+
+    }
+
+
+    [Fact]
+    public async Task GetListsItems_GetListOfItemssWithTimeSearchOnDueDate_ReturnsListWithinTimeMatch()
+    {
+        await SetTokenAsync();
+        var listId = await CreateAListAsync("Testing from and to Utc");
+        NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request[] items = [
+            new(){ListId = listId, Title = "Test item due in 3 days", Due = App.FakeTime.GetUtcNow().AddDays(3)},
+            new(){ListId = listId, Title = "Test item due 12 days", Due = App.FakeTime.GetUtcNow().AddDays(12)},
+            new(){ListId = listId, Title = "Test item due in 4 days", Due = App.FakeTime.GetUtcNow().AddDays(5)},
+            new(){ListId = listId, Title = "Test item due in 6 days", Due = App.FakeTime.GetUtcNow().AddDays(6)}
+        ];
+        // TODO add all items
+
+        var from = App.FakeTime.GetUtcNow().AddDays(4);
+        var to = App.FakeTime.GetUtcNow().AddDays(8);
+
+        Assert.NotEqual(to, from);
+
+
+        var (rsp, res) = await App.Client.GETAsync<GetListItemsEndpoint, Request, Response>(new Request
+        {
+            ListId = listId,
+            FromUtc = from,
+            ToUtc = to
+        });
+
+        Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
+        Assert.Equal(2, res.List.Length);
+
+        //Check items
 
     }
 }
