@@ -5,7 +5,10 @@ using NotesWeb.Entities;
 
 namespace NotesWeb.Data;
 
-public class NoteBoardDBContext(DbContextOptions<NoteBoardDBContext> options) : DbContext(options), IUserAccess
+public class NoteBoardDBContext(DbContextOptions<NoteBoardDBContext> options) : DbContext(options),
+    IUserAccess,
+    IToDoListAccess,
+    IToDoItemAccess
 {
     public DbSet<User> Users { get; set; }
     public DbSet<ToDoItem> ToDoItems { get; set; }
@@ -50,4 +53,13 @@ public class NoteBoardDBContext(DbContextOptions<NoteBoardDBContext> options) : 
 
     public async Task<User?> TryFindUserByEmailAsync(string email) =>
         await Users.FirstOrDefaultAsync(user => user.Email == email);
+
+
+    //* List Access */
+    public async Task<ToDoList?> TryFindToDoListById(Guid id) =>
+        await ToDoLists.FindAsync(id);
+
+    //* Item Access */
+    public async Task<ToDoItem?> TryFindToDoItemById(Guid id) =>
+        await ToDoItems.FindAsync(id);
 }

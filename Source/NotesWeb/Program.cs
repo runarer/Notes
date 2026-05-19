@@ -48,8 +48,8 @@ builder.Services.AddDbContext<NoteBoardDBContext>(
 
 // Register services for accessing the data. Makes endpoints independent of efcore.
 builder.Services.AddScoped<IUserAccess, NoteBoardDBContext>();
-//* 
-//*
+builder.Services.AddScoped<IToDoListAccess, NoteBoardDBContext>();
+builder.Services.AddScoped<IToDoItemAccess, NoteBoardDBContext>();
 
 
 // Need timeprovider, also makes testing easier as it can be swapped with a fake one.
