@@ -166,4 +166,28 @@ public class CompleteToDoItemTests(App App, LoginState State) : LoggedinTests(Ap
         // Assert 404
         Assert.Equal(HttpStatusCode.NotFound, rsp.StatusCode);
     }
+
+    [Fact]
+    public async Task CompleteToDoItem_ItemIsCreatedSwitchUserAndTryToComplete_ReturnForbidden()
+    {
+        // SignUp user
+        await SetTokenAsync();
+
+        // Create a list
+        var listId = await CreateAListAsync("List for testing complet item");
+        // Add an item
+        string item = "Test item 1";
+        var itemId = await CreateAnItemAsync(listId, item);
+
+        await SwitchUser();
+        // Complete item
+        var rsp = await App.Client.PATCHAsync<CompleteToDoItemEndpoint, Request>(new Request
+        {
+            ItemId = itemId
+        });
+        Assert.Equal(HttpStatusCode.Forbidden, rsp.StatusCode);
+
+        await SwitchBackUser();
+    }
+
 }

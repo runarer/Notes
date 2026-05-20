@@ -1,4 +1,5 @@
 
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using NotesWeb.Features.Users.Login;
 
@@ -52,6 +53,15 @@ public class UserLoginTests(App App, LoginState State) : TestBase<App, LoginStat
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
         // Assert JWT
         Assert.NotNull(res);
+        Assert.NotNull(res.Token);
+
+        // Check that jwt has role set and a uniq UserId
+        var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(res.Token);
+
+        Assert.Contains("User", jwtToken.Payload["role"].ToString());
+        bool result = Guid.TryParse(jwtToken.Payload["UserId"].ToString(), out Guid userId);
+        Assert.True(result);
+        Assert.NotEqual(default, userId);
     }
 
     [Fact]

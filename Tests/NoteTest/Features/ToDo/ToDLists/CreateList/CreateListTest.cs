@@ -29,7 +29,7 @@ public class CreateListTests(App App, LoginState State) : LoggedinTests(App, Sta
     }
 
     [Fact]
-    public async Task CreateList_TitleToShort_GetPRoblemDetailsWithErrorMessage()
+    public async Task CreateList_TitleToShort_GetProblemDetailsWithErrorMessage()
     {
         await SetTokenAsync();
 
@@ -53,7 +53,7 @@ public class CreateListTests(App App, LoginState State) : LoggedinTests(App, Sta
     }
 
     [Fact]
-    public async Task CreateList_TitleToLong_GetPRoblemDetailsWithErrorMessage()
+    public async Task CreateList_TitleToLong_GetProblemDetailsWithErrorMessage()
     {
         await SetTokenAsync();
 
@@ -77,7 +77,7 @@ public class CreateListTests(App App, LoginState State) : LoggedinTests(App, Sta
     }
 
     [Fact]
-    public async Task CreateList_NoTitleProvided_GetPRoblemDetailsWithErrorMessage()
+    public async Task CreateList_NoTitleProvided_GetProblemDetailsWithErrorMessage()
     {
         await SetTokenAsync();
 

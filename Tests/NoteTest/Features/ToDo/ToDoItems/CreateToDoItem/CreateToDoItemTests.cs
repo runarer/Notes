@@ -209,4 +209,23 @@ public class CreateToDoItemTests(App App, LoginState State) : LoggedinTests(App,
 
         Assert.Equal(HttpStatusCode.NotFound, rsp.StatusCode);
     }
+
+    [Fact]
+    public async Task CreateItem_WithValidInputButNotOwnedList_ReturnForbidden()
+    {
+        await SetTokenAsync();
+        var listId = await CreateAListAsync("Test list for adding items");
+
+        // Switch user and create item
+        await SwitchUser();
+
+        _validRequest.ListId = listId;
+
+        var (rsp, _) = await App.Client.POSTAsync<CreateToDoItemEndpoint, Request, ItemResponse>(_validRequest);
+
+
+        Assert.Equal(HttpStatusCode.Forbidden, rsp.StatusCode);
+
+        await SwitchBackUser();
+    }
 }

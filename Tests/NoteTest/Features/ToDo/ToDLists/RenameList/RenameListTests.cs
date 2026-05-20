@@ -133,4 +133,26 @@ public class RenameListTests(App App, LoginState State) : LoggedinTests(App, Sta
 
         Assert.Equal(HttpStatusCode.NotFound, rsp.StatusCode);
     }
+
+    [Fact]
+    public async Task RenameList_ListExistsAndAValidInputButItsNotOwned_ReturnForbidden()
+    {
+        // Create a list then create a request for renaming
+        await SetTokenAsync();
+        var listId = await CreateAListAsync("Test List rename valid");
+        var validRequest = new Request
+        {
+            Title = "Renamed List with valid title",
+            ListId = listId
+        };
+
+        await SwitchUser();
+
+        var (rsp, _) = await App.Client.PATCHAsync<RenameListEndpoint, Request, Response>(validRequest);
+
+        Assert.Equal(HttpStatusCode.Forbidden, rsp.StatusCode);
+
+        await SwitchBackUser();
+
+    }
 }

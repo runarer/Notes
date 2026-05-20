@@ -23,8 +23,10 @@ public class GetListEndpoint(NoteBoardDBContext dbContext) : Endpoint<Request, R
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
         var list = await _dbContext.ToDoLists.FindAsync([request.ListId], ct);
-        if (list is null || list.UserId != request.UserId)
+        if (list is null)
             await Send.NotFoundAsync(ct);
+        else if (list.UserId != request.UserId)
+            await Send.ForbiddenAsync(ct);
         else
             await Send.OkAsync(Map.FromEntity(list), ct);
 

@@ -24,6 +24,31 @@ public class SignUpTests(App App) : TestBase<App>
         Assert.NotNull(res);
     }
 
+    [Fact, Priority(1)]
+    public async Task SignupSeveralUsers_ReturnsOkAndUserObject()
+    {
+        Request[] validUsers = [
+        new() {Username = "User1", FullName = "First User", Email = "first@example.com", Password ="firstUser" },
+        new() {Username = "User2", FullName = "Second User", Email = "second@example.com", Password ="secondUser" },
+        new() {Username = "User3", FullName = "Third User", Email = "third@example.com", Password ="thirdUser" },
+        new() {Username = "User4", FullName = "Forth User", Email = "forth@example.com", Password ="forthUser" },
+        new() {Username = "User5", FullName = "Fifth User", Email = "fifth@example.com", Password ="fifthUser" },
+        new() {Username = "User6", FullName = "Sixth User", Email = "sixth@example.com", Password ="sixthUser" },
+        new() {Username = "User7", FullName = "Seventh User", Email = "seventh@example.com", Password ="seventhUser" },
+        new() {Username = "User8", FullName = "Eigth User", Email = "eigth@example.com", Password ="eigthUser" },
+
+    ];
+
+        foreach (var user in validUsers)
+        {
+            var (rsp, res) = await App.Client.POSTAsync<SignUpEndpoint, Request, Response>(user);
+
+            Assert.Equal(HttpStatusCode.Created, rsp.StatusCode);
+            Assert.NotNull(res);
+        }
+
+    }
+
     [Fact, Priority(2)]
     public async Task UsernameTaken_ReturnsOkAndUserObject()
     {

@@ -43,4 +43,23 @@ public class GetListTests(App App, LoginState State) : LoggedinTests(App, State)
         Assert.Equal(HttpStatusCode.NotFound, rsp.StatusCode);
 
     }
+
+    [Fact]
+    public async Task GetList_ListDoesExistsButNotOwned_ReturnForbidden()
+    {
+        // SignUp user
+        await SetTokenAsync();
+        var listId = await CreateAListAsync("Not allowed");
+
+        await SwitchUser();
+        var (rsp, _) = await App.Client.GETAsync<GetListEndpoint, Request, Response>(
+                new Request
+                {
+                    ListId = listId
+                });
+
+
+        Assert.Equal(HttpStatusCode.Forbidden, rsp.StatusCode);
+        await SwitchBackUser();
+    }
 }

@@ -1,6 +1,6 @@
 
 using System.Net;
-
+using NotesWeb.Features.ToDo.ToDoItems;
 using NotesWeb.Features.ToDo.ToDoItems.DeleteToDoItem;
 
 namespace NoteTest.Features.ToDo.ToDoItems.DeleteToDoItem;
@@ -37,6 +37,37 @@ public class DeleteToDoItemTests(App App, LoginState State) : LoggedinTests(App,
 
         // Assert list empty
         Assert.Empty(resGet.List);
+    }
+
+    [Fact]
+    public async Task DeleteItem_CreateAndItemSwitchUserTryDeleteItem_ReturnForbiddenItemNotGone()
+    {
+        // SignUp user
+        await SetTokenAsync();
+
+        // Add and item
+        var listId = await CreateAListAsync("Test list for deleting");
+        var itemId = await CreateAnItemAsync(listId, "Delete item");
+
+        await SwitchUser();
+
+        // Delete Item
+        var del_rsp = await App.Client.DELETEAsync<DeleteToDoItemEndpoint, Request>(new Request { ItemId = itemId });
+        Assert.Equal(HttpStatusCode.Forbidden, del_rsp.StatusCode);
+
+        await SwitchBackUser();
+
+        // Make sure item still there
+        var (rsp, res) = await App.Client.GETAsync<
+                NotesWeb.Features.ToDo.ToDoItems.GetItem.GetItemEndpoint,
+                NotesWeb.Features.ToDo.ToDoItems.GetItem.Request, ItemResponse>(
+            new NotesWeb.Features.ToDo.ToDoItems.GetItem.Request
+            {
+                ItemId = itemId
+            });
+
+        Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
+        Assert.NotNull(res);
     }
 
     [Fact]

@@ -48,4 +48,23 @@ public class DeleteListTests(App App, LoginState State) : LoggedinTests(App, Sta
 
         Assert.Equal(HttpStatusCode.NoContent, rsp.StatusCode);
     }
+
+    [Fact]
+    public async Task DeleteList_ListDoesExistsButNotOwned_ReturnNoContent()
+    {
+        // SignUp user
+        await SetTokenAsync();
+        var listId = await CreateAListAsync("Test List to delete");
+
+        await SwitchUser();
+
+        var rsp = await App.Client.DELETEAsync<DeleteListEndpoint, Request>(new Request
+        {
+            ListId = listId
+        });
+
+        Assert.Equal(HttpStatusCode.NoContent, rsp.StatusCode);
+
+        await SwitchBackUser();
+    }
 }

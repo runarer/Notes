@@ -1,5 +1,6 @@
 
 using System.Net;
+using Microsoft.VisualBasic;
 using NotesWeb.Features.ToDo.ToDoItems.GetListItems;
 
 namespace NoteTest.Features.ToDo.ToDoItems.GetList;
@@ -227,32 +228,60 @@ public class GetListTests(App App, LoginState State) : LoggedinTests(App, State)
     public async Task GetListsItems_GetListOfItemssWithTimeSearchOnDueDate_ReturnsListWithinTimeMatch()
     {
         await SetTokenAsync();
+
+        // Create a list and add items with due date to it
         var listId = await CreateAListAsync("Testing from and to Utc");
         NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request[] items = [
             new(){ListId = listId, Title = "Test item due in 3 days", Due = App.FakeTime.GetUtcNow().AddDays(3)},
+            new(){ListId = listId, Title = "Test item due in 6 days", Due = App.FakeTime.GetUtcNow().AddDays(6)},
             new(){ListId = listId, Title = "Test item due 12 days", Due = App.FakeTime.GetUtcNow().AddDays(12)},
             new(){ListId = listId, Title = "Test item due in 4 days", Due = App.FakeTime.GetUtcNow().AddDays(5)},
-            new(){ListId = listId, Title = "Test item due in 6 days", Due = App.FakeTime.GetUtcNow().AddDays(6)}
         ];
-        // TODO add all items
+        foreach (var item in items)
+            _ = await CreateAnItemAsync(item);
 
+        // Create testing time window
         var from = App.FakeTime.GetUtcNow().AddDays(4);
         var to = App.FakeTime.GetUtcNow().AddDays(8);
-
         Assert.NotEqual(to, from);
 
+        // These are the titles of expected return items
+        string[] expected = [.. items.Where(item => item.Due >= from && item.Due <= to).Select(item => item.Title)];
 
+
+        // Act: Get items in time window
         var (rsp, res) = await App.Client.GETAsync<GetListItemsEndpoint, Request, Response>(new Request
         {
             ListId = listId,
-            FromUtc = from,
-            ToUtc = to
+            DueFromUtc = from,
+            DueToUtc = to
         });
 
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
-        Assert.Equal(2, res.List.Length);
-
         //Check items
+        Assert.Equal(expected.Length, res.List.Length);
+        Assert.Equivalent(expected, res.List.Select(e => e.Title));
+    }
 
+    [Fact]
+    public async Task GetListItems_CreateAListThenAccessItWithAnotherAccount_ReturnForbidden()
+    {
+        // Create a list as normal
+        await SetTokenAsync();
+        var forbiddenList = await CreateAListAsync("not allowed to access");
+
+        await SwitchUser();
+
+        // Make forbidden request
+        var (rsp, _) = await App.Client.GETAsync<GetListItemsEndpoint, Request, Response>(new Request
+        {
+            ListId = forbiddenList
+        });
+
+
+        // Make sure it's right results
+        Assert.Equal(HttpStatusCode.Forbidden, rsp.StatusCode);
+
+        await SwitchBackUser();
     }
 }
