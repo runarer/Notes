@@ -15,8 +15,8 @@ public class GetListsWithItemsEndpoint(NoteBoardDBContext dbContext, TimeProvide
         Claims("UserId");
         Summary(s =>
         {
-            s.Summary = "Get list of items in a list";
-            s.Description = "This returns a list of the item in a list, can filter on searchterm (title and description), completed, due time and update time.";
+            s.Summary = "Get lists of items";
+            s.Description = "This returns a list of all the lists with items matching the query. If no query provided all items will be returned.";
         });
     }
 
