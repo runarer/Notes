@@ -11,7 +11,7 @@ public class GetListsEndpoint(NoteBoardDBContext dbContext, TimeProvider timePro
 
     public override void Configure()
     {
-        Get("/todo");
+        Get("/todo/lists");
         PreProcessor<UserPreProcessor>();
         Roles("User");
         Claims("UserId");
