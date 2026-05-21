@@ -1,19 +1,11 @@
 # Notes
 
-## Todo
+Den orginale innleveringen er i branchen OldMain.
 
-- [x] Remake the model
-- [ ] Add interfaces for data access, add theses to dbcontext.
-- [ ] Add a check if valid user for each request -> this can be removed if Google sign in is used later
-- [ ] Remove every file thats not used
-- [ ] Remove code thats not used, and comment code that is. Do this while changing endpoint to use new intrefaces.
-- [x] Add some comments for redactor and such
-- [ ] Change filtering to use Due date
-- [ ] Create a new branch from main and focus on api changes, or copy frontend somewhere and then remove it from sln and branch.
-- [ ] Add the frontend, frontend may not need google sign in.
-- [ ] Remove "Commons/PreProcessors"
+Prosjektet er en API, men skiller seg noe fra 'Case 8: RestAPI Applikasjon' ved bruk av
+Vertical slice architecture og [Fast-Endpoints](https://fast-endpoints.com/).
 
-## Old stuff
+## Vertical Slice Architecture
 
 A _Slightly_ over-engineered todo-api, because that's what one does.
 
@@ -46,15 +38,12 @@ Then lists can be added and items can be added to it.
 
 ## Stack:
 
-**Postgres**; a database system so advanced it could replace the whole system.
+**Postgres;** a database system so advanced it could replace the whole system.
 And I use it just to hold three tables, nice. Sqlite would be more appropriate,
 but I wanted a real database system so the docker compose became a bit "meatier"
 and it offer more learing opportunities.
 
-**OpenTelemetry**; every system need a log. And with this set to 'information'
-level, everytime someone add or completes a task 99.5% of the data stored
-is just the log.
-
+**OpenTelemetry;**
 For this system, writing the log to a file would be enough, however OpenTelemetry
 is being used more and more in the industry and thought it would be usefull to
 experiment with it.
@@ -70,3 +59,15 @@ make themselfs known.
 
 Testing is done with TestContainer and FastEndpoints.Testing package.
 TestContainer needs docker running.
+
+## Todo
+
+- [x] Remake the model
+- [x] Add a check if valid user for each request
+- [x] Remove every file thats not used
+- [x] Remove code thats not used, and comment code that is.
+- [x] Add some comments for redactor and such
+- [x] Add filtering for Due date
+- [x] Remove "Commons/PreProcessors"
+- [x] Add endpoint for combined list and items
+- [ ] Add tests for new endpoint
