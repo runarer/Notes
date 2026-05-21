@@ -59,7 +59,7 @@ make themselfs known.
 Testing is done with TestContainer and FastEndpoints.Testing package.
 TestContainer needs docker running.
 
-## Todo
+## Rework Todo
 
 - [x] Remake the model
 - [x] Add a check if valid user for each request
@@ -69,4 +69,4 @@ TestContainer needs docker running.
 - [x] Add filtering for Due date
 - [x] Remove "Commons/PreProcessors"
 - [x] Add endpoint for combined list and items
-- [ ] Add tests for new endpoint
+- [x] Add tests for new endpoint
