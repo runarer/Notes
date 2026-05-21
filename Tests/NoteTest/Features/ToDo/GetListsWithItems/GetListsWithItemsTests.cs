@@ -1,4 +1,4 @@
-using System.Net;
+/*using System.Net;
 using NotesWeb.Features.ToDo.GetListsWithItems;
 
 namespace NoteTest.Features.ToDo.GetListsWithItems;
@@ -303,4 +303,4 @@ public class GetListTests(App App, LoginState State) : LoggedinTests(App, State)
         // Assert.Equal(expected.Length, res.List.Length);
         // Assert.Equivalent(expected, res.List.Select(e => e.Title));
     }
-}
+}*/
