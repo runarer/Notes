@@ -1,4 +1,4 @@
-/*using System.Net;
+using System.Net;
 using NotesWeb.Features.ToDo.GetListsWithItems;
 
 namespace NoteTest.Features.ToDo.GetListsWithItems;
@@ -6,83 +6,34 @@ namespace NoteTest.Features.ToDo.GetListsWithItems;
 public class GetListTests(App App, LoginState State) : LoggedinTests(App, State)
 {
 
-    private const string _searchTerm = "asdf";
-    private readonly NotesWeb.Features.ToDo.ToDoLists.CreateList.Request[] _lists = [
-        new (){ Title = "Testlist 1" },
-        new (){ Title = "Testlist 2" },
-        new (){ Title = "Testlist 3" },
-        new (){ Title = "Testlist 4" },
-    ];
-
-    private readonly NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request[] _items1 = [
-      new (){Title = "T1 Complete", Description = "Complete this item"},
-      new (){Title = "T1 not completed", Description = "not complete this item"},
-      new (){Title = "T1"+_searchTerm, Description = "SearchTerm in title"},
-      new (){Title = "T1 not completed", Description = "Search for this" + _searchTerm},
-      new (){Title = "T1", Description = "Item is due in 3 days", Due = App.FakeTime.GetUtcNow().AddDays(3)},
-      new (){Title = "T1", Description = "Item is due in 5 days", Due = App.FakeTime.GetUtcNow().AddDays(5)},
-    ];
-
-    private readonly NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request[] _items2 = [
-      new (){Title = "T2 Complete", Description = "Complete this item"},
-      new (){Title = "T2 not completed", Description = "not complete this item"},
-      new (){Title = "T2"+_searchTerm, Description = "SearchTerm in title"},
-      new (){Title = "T2 not completed", Description = "Search for this" + _searchTerm},
-      new (){Title = "T2", Description = "Item is due in 3 days", Due = App.FakeTime.GetUtcNow().AddDays(3)},
-      new (){Title = "T2", Description = "Item is due in 5 days", Due = App.FakeTime.GetUtcNow().AddDays(5)},
-    ];
-
-    private readonly NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request[] _items3 = [
-      new (){Title = "T3 Complete", Description = "Complete this item"},
-      new (){Title = "T3 not completed", Description = "not complete this item"},
-      new (){Title = "T3"+_searchTerm, Description = "SearchTerm in title"},
-      new (){Title = "T3 not completed", Description = "Search for this" + _searchTerm},
-      new (){Title = "T3", Description = "Item is due in 3 days", Due = App.FakeTime.GetUtcNow().AddDays(3)},
-      new (){Title = "T3", Description = "Item is due in 5 days", Due = App.FakeTime.GetUtcNow().AddDays(5)},
-    ];
-
-    private readonly NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request[] _items4 = [
-      new (){Title = "T4 Complete", Description = "Complete this item"},
-      new (){Title = "T4 not completed", Description = "not complete this item"},
-      new (){Title = "T4"+_searchTerm, Description = "SearchTerm in title"},
-      new (){Title = "T4 not completed", Description = "Search for this" + _searchTerm},
-      new (){Title = "T4", Description = "Item is due in 3 days", Due = App.FakeTime.GetUtcNow().AddDays(3)},
-      new (){Title = "T4", Description = "Item is due in 5 days", Due = App.FakeTime.GetUtcNow().AddDays(5)},
-    ];
-
-
-    private async Task CreateListsAndItems()
+    private async Task<List<(Guid, List<Guid>)>> AddListsAndItems(Response lists)
     {
         await SetTokenAsync();
 
-        // foreach (var list in _lists)
-        // {
-        //     var (rsp, res) = await App.Client.POSTAsync<
-        //     NotesWeb.Features.ToDo.ToDoLists.CreateList.CreateListEndpoint,
-        //     NotesWeb.Features.ToDo.ToDoLists.CreateList.Request,
-        //     NotesWeb.Features.ToDo.ToDoLists.CreateList.Response
-        //     >(list);
+        List<(Guid, List<Guid>)> addedListAndItems = [];
 
-        //     Assert.Equal(HttpStatusCode.Created, rsp.StatusCode);
-        //     Assert.NotNull(res);
-        // }
-
-        var listid = _lists.Select(async list =>
+        foreach (var list in lists.Lists)
         {
-            var (rsp, res) = await App.Client.POSTAsync<
-                NotesWeb.Features.ToDo.ToDoLists.CreateList.CreateListEndpoint,
-                NotesWeb.Features.ToDo.ToDoLists.CreateList.Request,
-                NotesWeb.Features.ToDo.ToDoLists.CreateList.Response
-            >(list);
+            // Create the list
+            var listId = await CreateAListAsync(list.Title);
 
-            Assert.Equal(HttpStatusCode.Created, rsp.StatusCode);
-            Assert.NotNull(res);
+            List<Guid> addedItems = [];
+            // Add items to list
+            foreach (var item in list.Items)
+            {
+                var itemId = await CreateAnItemAsync(new NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request
+                {
+                    ListId = listId,
+                    Title = item.Title,
+                    Description = item.Description,
+                    Due = item.Due
+                });
+                addedItems.Add(itemId);
 
-            return res.ListId;
-        }).ToArray();
-
-
-
+            }
+            addedListAndItems.Add((listId, addedItems));
+        }
+        return addedListAndItems;
     }
 
 
@@ -107,200 +58,282 @@ public class GetListTests(App App, LoginState State) : LoggedinTests(App, State)
     [Fact, Priority(2)]
     public async Task GetListsWithItems_CreateListsAndAddItemsThenEverythingBack_ReturnsListOfItems()
     {
-        // SignUp user
+        // All of this should be returned
+        var listsAndItems = new Response
+        {
+            Lists = [
+                new (){
+                    Title = "Test List 1",
+                    Items = [
+                        new() { Title = "Test Item 1-1"},
+                        new() { Title = "Test Item 1-2"}
+                ]},
+                new (){
+                    Title = "Test List 2",
+                    Items = [
+                        new() {Title = "Test Item 2-1"}
+                    ]
+                }
+            ]
+        };
+
+        // SignUp user and add items
         await SetTokenAsync();
+        _ = await AddListsAndItems(listsAndItems);
 
 
-
-    }
-
-    [Fact]
-    public async Task GetListItems_CreateAListAndAddItemsThenGetListWithSearchTerm_ReturnsListOfMatchingItems()
-    {
-        // SignUp user
-        await SetTokenAsync();
-        // Create a list
-        var listId = await CreateAListAsync("List for testing GetList");
-        var searchTerm = "asdf";
-        // Add several items
-
-        NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request[] items = [
-                new() {ListId = listId,Title = "Test item 1"},
-                new() {ListId = listId,Title = searchTerm+"Test item 2"},
-                new() {ListId = listId,Title = "Test item 3", Description ="Some text"+searchTerm},
-                new() {ListId = listId,Title = "Test item 4"+searchTerm},
-                new() {ListId = listId,Title = "Test item 5", Description ="Some text"},
-
-            ];
-        foreach (var item in items)
-            _ = await CreateAnItemAsync(item);
-
-
-        // Get list
+        // Get lists
         var (rsp, res) = await App.Client.GETAsync<GetListsWithItemsEndpoint, Request, Response>(new Request
         {
-            Search = searchTerm,
-
         });
-
-
-        // Assert all items has searchTerm
-        // Assert.Equal(3, res.List.Length);
-        // Assert.All(res.List, list =>
-        // {
-        //     Assert.True(
-        //         list.Title.Contains(searchTerm) ||
-        //         (list.Description is not null && list.Description.Contains(searchTerm)));
-        // });
-
-    }
-
-
-    [Fact]
-    public async Task GetListsItems_GetListOfItemsWithToDateBeforeFromDate_ReturnsProblemDetails()
-    {
-        var expected = new[] {
-            ("fromUtc", "'from Utc' must be after 'To Utc'.")};
-
-        await SetTokenAsync();
-
-        var listId = await CreateAListAsync("Testing time error response");
-
-        var (rsp, res) = await App.Client.GETAsync<GetListsWithItemsEndpoint, Request, ProblemDetails>(
-            new Request
-            {
-                FromUtc = App.FakeTime.GetUtcNow().AddDays(-10),
-                ToUtc = App.FakeTime.GetUtcNow().AddDays(-12)
-            });
-
-        Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
-        Assert.NotNull(res);
-
-        Assert.Single(res.Errors);
-        Assert.Equivalent(expected, res.Errors.Select(e => (e.Name, e.Reason)));
-
-    }
-
-
-    [Fact]
-    public async Task GetListsItems_GetListOfItemsWithDueToDateBeforeDueFromDate_ReturnsProblemDetails()
-    {
-        var expected = new[] {
-            ("dueFromUtc", "'due From Utc' must be after 'Due To Utc'.")};
-
-        await SetTokenAsync();
-
-        var listId = await CreateAListAsync("Testing time error response");
-
-        var (rsp, res) = await App.Client.GETAsync<GetListsWithItemsEndpoint, Request, ProblemDetails>(
-            new Request
-            {
-                DueFromUtc = App.FakeTime.GetUtcNow().AddDays(10),
-                DueToUtc = App.FakeTime.GetUtcNow().AddDays(8)
-            });
-
-        Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
-        Assert.NotNull(res);
-
-        Assert.Single(res.Errors);
-        Assert.Equivalent(expected, res.Errors.Select(e => (e.Name, e.Reason)));
-
-    }
-
-    [Fact]
-    public async Task GetListsItems_GetListOfItemsWithFromDateInTheFuture_ReturnsProblemDetails()
-    {
-        var expected = new[] {
-            ("fromUtc", "Date 'from Utc' must be in the past!")};
-
-        await SetTokenAsync();
-
-        var listId = await CreateAListAsync("Testing time error response");
-
-
-
-        var (rsp, res) = await App.Client.GETAsync<GetListsWithItemsEndpoint, Request, ProblemDetails>(
-            new Request
-            {
-                FromUtc = App.FakeTime.GetUtcNow().AddDays(3)
-            });
-
-
-        Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
-        Assert.NotNull(res);
-
-        Assert.Single(res.Errors);
-        Assert.Equivalent(expected, res.Errors.Select(e => (e.Name, e.Reason)));
-
-    }
-
-    [Fact]
-    public async Task GetListsItems_GetListOfItemssWithTimeSearch_ReturnsListWithinTimeMatch()
-    {
-        List<string> items = ["Test item 3 days ago", "Test item 4 day ago"];
-        await SetTokenAsync();
-
-        var listId = await CreateAListAsync("Testing from and to Utc");
-
-        var from = App.FakeTime.GetUtcNow().AddHours(-1);
-        _ = await CreateAnItemAsync(listId, items[0]);
-        var to = App.FakeTime.GetUtcNow().AddHours(2);
-
-        App.FakeTime.Advance(TimeSpan.FromDays(3));
-        _ = await CreateAnItemAsync(listId, items[1]);
-
-
-        Assert.NotEqual(to, from);
-
-
-        var (rsp, res) = await App.Client.GETAsync<GetListsWithItemsEndpoint, Request, Response>(new Request
-        {
-            FromUtc = from,
-            ToUtc = to
-        });
-
+        // Assert
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
-        // Assert.Single(res.List);
-        // Assert.Equal(items[0], res.List[0].Title);
+        Assert.NotNull(res);
+
+        // List returned are as expected
+        Assert.Equal(2, res.Lists.Length);
+        Assert.Equivalent(listsAndItems.Lists.Select(list => list.Title), res.Lists.Select(e => e.Title));
+
+        // items in "Test List 1" matches items returned in list with title "Test List 1"
+        var items1 = res.Lists.Single(list => list.Title == "Test List 1").Items;
+        Assert.Equal(2, items1.Length);
+        Assert.Equivalent(listsAndItems.Lists.Single(list => list.Title == "Test List 1").Items.Select(item => item.Title), items1.Select(e => e.Title));
+
+        // items in "Test List 2" matches items returned in 
+        var items2 = res.Lists.Single(list => list.Title == "Test List 2").Items;
+        Assert.Single(items2);
+        Assert.Equivalent(listsAndItems.Lists.Single(list => list.Title == "Test List 2").Items.Select(item => item.Title), items2.Select(e => e.Title));
 
     }
 
 
-    [Fact]
-    public async Task GetListsItems_GetListOfItemssWithTimeSearchOnDueDate_ReturnsListWithinTimeMatch()
+    [Fact, Priority(3)]
+    public async Task GetListsWithItems_CreateListsAndAddItemsWithDueDate_ReturnsListOfItemsWithinCorrectDueDate()
     {
+        var expectedList = "Test List Due 1";
+        var expectedItem = "Test Item Due 1-2";
+        // All of this should be returned
+        var listsAndItems = new Response
+        {
+            Lists = [
+                new (){
+                    Title = expectedList,
+                    Items = [
+                        new() { Title = "Test Item Due 1-1", Due = App.FakeTime.GetUtcNow().AddDays(1)},
+                        new() { Title = expectedItem, Due = App.FakeTime.GetUtcNow().AddDays(3)}
+                ]},
+                new (){
+                    Title = "Test List Due 2",
+                    Items = [
+                        new() {Title = "Test Item Due 2-1", Due = App.FakeTime.GetUtcNow().AddDays(5)}
+                    ]
+                }
+            ]
+        };
+        var from = App.FakeTime.GetUtcNow().AddDays(2);
+        var to = App.FakeTime.GetUtcNow().AddDays(4);
+
+        // SignUp user and add items
         await SetTokenAsync();
-
-        // Create a list and add items with due date to it
-        var listId = await CreateAListAsync("Testing from and to Utc");
-        NotesWeb.Features.ToDo.ToDoItems.CreateToDoItem.Request[] items = [
-            new(){ListId = listId, Title = "Test item due in 3 days", Due = App.FakeTime.GetUtcNow().AddDays(3)},
-            new(){ListId = listId, Title = "Test item due in 6 days", Due = App.FakeTime.GetUtcNow().AddDays(6)},
-            new(){ListId = listId, Title = "Test item due 12 days", Due = App.FakeTime.GetUtcNow().AddDays(12)},
-            new(){ListId = listId, Title = "Test item due in 4 days", Due = App.FakeTime.GetUtcNow().AddDays(5)},
-        ];
-        foreach (var item in items)
-            _ = await CreateAnItemAsync(item);
-
-        // Create testing time window
-        var from = App.FakeTime.GetUtcNow().AddDays(4);
-        var to = App.FakeTime.GetUtcNow().AddDays(8);
-        Assert.NotEqual(to, from);
-
-        // These are the titles of expected return items
-        string[] expected = [.. items.Where(item => item.Due >= from && item.Due <= to).Select(item => item.Title)];
+        _ = await AddListsAndItems(listsAndItems);
 
 
-        // Act: Get items in time window
+        // Get lists
         var (rsp, res) = await App.Client.GETAsync<GetListsWithItemsEndpoint, Request, Response>(new Request
         {
             DueFromUtc = from,
             DueToUtc = to
         });
-
+        // Assert
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
-        //Check items
-        // Assert.Equal(expected.Length, res.List.Length);
-        // Assert.Equivalent(expected, res.List.Select(e => e.Title));
+        Assert.NotNull(res);
+
+        // List returned are as expected
+        Assert.Single(res.Lists);
+        Assert.Equal(expectedList, res.Lists[0].Title);
+
+        Assert.Single(res.Lists[0].Items);
+        Assert.Equal(expectedItem, res.Lists[0].Items[0].Title);
     }
-}*/
+
+
+    [Fact, Priority(3)]
+    public async Task GetListsWithItems_CreateListsAndAddItemsWithDueDateButFromIsAfterTo_ReturnsProblemDetails()
+    {
+        var expected = new[] {
+            ("dueFromUtc", "'due From Utc' must be after 'Due To Utc'.")};
+        var from = App.FakeTime.GetUtcNow().AddDays(2);
+        var to = App.FakeTime.GetUtcNow().AddDays(4);
+
+        // SignUp user and add items
+        await SetTokenAsync();
+
+
+        // Get lists
+        var (rsp, res) = await App.Client.GETAsync<GetListsWithItemsEndpoint, Request, ProblemDetails>(new Request
+        {
+            DueFromUtc = to,
+            DueToUtc = from
+        });
+
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
+        Assert.NotNull(res);
+
+        Assert.Single(res.Errors);
+        Assert.Equivalent(expected, res.Errors.Select(e => (e.Name, e.Reason)));
+
+    }
+
+
+
+    [Fact, Priority(3)]
+    public async Task GetListsWithItems_CreateListsAndAddItemsAndCompleteOne_ReturnsListOfCompletedItems()
+    {
+        var expectedList = "Test List Completed 1";
+        var expectedItem = "Test Item Completed 1-2";
+        // All of this should be returned
+        var listsAndItems = new Response
+        {
+            Lists = [
+                new (){
+                    Title = expectedList,
+                    Items = [
+                        new() { Title = "Test Item Completed 1-1"},
+                        new() { Title = expectedItem}
+                ]},
+                new (){
+                    Title = "Test List Due 2",
+                    Items = [
+                        new() {Title = "Test Item Completed 2-1"}
+                    ]
+                }
+            ]
+        };
+
+        // SignUp user and add items
+        await SetTokenAsync();
+        var addedlistsAndItems = await AddListsAndItems(listsAndItems);
+
+        // Complete item
+        var rspComplete = await App.Client.PATCHAsync<
+            NotesWeb.Features.ToDo.ToDoItems.CompleteToDoItem.CompleteToDoItemEndpoint,
+            NotesWeb.Features.ToDo.ToDoItems.CompleteToDoItem.Request>(new
+            NotesWeb.Features.ToDo.ToDoItems.CompleteToDoItem.Request
+            {
+                ItemId = addedlistsAndItems[0].Item2[1] //First list second item
+            });
+        Assert.Equal(HttpStatusCode.OK, rspComplete.StatusCode);
+
+
+
+        // Get lists
+        var (rsp, res) = await App.Client.GETAsync<GetListsWithItemsEndpoint, Request, Response>(new Request
+        {
+            Completed = true
+        });
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
+        Assert.NotNull(res);
+
+        // List returned are as expected
+        Assert.Single(res.Lists);
+        Assert.Equivalent(expectedList, res.Lists[0].Title);
+
+        Assert.Single(res.Lists[0].Items);
+        Assert.Equivalent(expectedItem, res.Lists[0].Items[0].Title);
+    }
+
+
+    [Fact, Priority(3)]
+    public async Task GetListsWithItems_CreateListsAndAddItemsThenSearch_ReturnsListOfItemsMatchingSearchterm()
+    {
+        var searchterm = "adf";
+        // All of this should be returned
+        var listsAndItems = new Response
+        {
+            Lists = [
+                new (){
+                    Title = "Test List 1",
+                    Items = [
+                        new() { Title = "Test Item 1-1"},
+                        new() { Title = "Test Item 1-2"+searchterm}
+                ]},
+                new (){
+                    Title = "Test List 2",
+                    Items = [
+                        new() {Title = "Test Item 2-1",Description = searchterm+"Test description"}
+                    ]
+                }
+            ]
+        };
+
+        // SignUp user and add items
+        await SetTokenAsync();
+        _ = await AddListsAndItems(listsAndItems);
+
+
+        // Get lists
+        var (rsp, res) = await App.Client.GETAsync<GetListsWithItemsEndpoint, Request, Response>(new Request
+        {
+            Search = searchterm
+        });
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
+        Assert.NotNull(res);
+
+        // List returned are as expected
+        Assert.Equal(2, res.Lists.Length);
+        Assert.Equivalent(listsAndItems.Lists.Select(list => list.Title), res.Lists.Select(e => e.Title));
+
+        // Make sure there is only one item in first list, this items title matches the one with searchterm in its title
+        var items1 = res.Lists.Single(list => list.Title == "Test List 1").Items;
+        Assert.Single(items1);
+        Assert.Equivalent(
+            listsAndItems
+                .Lists.Single(list => list.Title == "Test List 1")
+                .Items.Where(item => item.Title.Contains(searchterm))
+                .Select(item => item.Title),
+            items1.Select(e => e.Title));
+
+        // Make sure there is only one item in second list, this items title matches the one with searchterm in its description
+        var items2 = res.Lists.Single(list => list.Title == "Test List 2").Items;
+        Assert.Single(items2);
+        Assert.Equivalent(
+            listsAndItems
+                .Lists.Single(list => list.Title == "Test List 2")
+                .Items.Where(item => item.Description!.Contains(searchterm))
+                .Select(item => item.Title),
+            items2.Select(e => e.Title));
+
+    }
+    [Fact, Priority(3)]
+    public async Task GetListsWithItems_CreateListsAndAddItemsWithDateButFromIsAfterTo_ReturnsProblemDetails()
+    {
+        var expected = new[] {
+            ("fromUtc", "'due From Utc' must be after 'Due To Utc'.")};
+        var from = App.FakeTime.GetUtcNow().AddDays(2);
+        var to = App.FakeTime.GetUtcNow().AddDays(4);
+
+        // SignUp user and add items
+        await SetTokenAsync();
+
+
+        // Get lists
+        var (rsp, res) = await App.Client.GETAsync<GetListsWithItemsEndpoint, Request, ProblemDetails>(new Request
+        {
+            FromUtc = to,
+            ToUtc = from
+        });
+
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
+        Assert.NotNull(res);
+
+        Assert.Single(res.Errors);
+        Assert.Equivalent(expected, res.Errors.Select(e => (e.Name, e.Reason)));
+
+    }
+}

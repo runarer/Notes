@@ -39,8 +39,7 @@ Then lists can be added and items can be added to it.
 ## Stack:
 
 **Postgres;** a database system so advanced it could replace the whole system.
-And I use it just to hold three tables, nice. Sqlite would be more appropriate,
-but I wanted a real database system so the docker compose became a bit "meatier"
+I wanted a real database system so the docker compose became a bit "meatier"
 and it offer more learing opportunities.
 
 **OpenTelemetry;**

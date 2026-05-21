@@ -23,10 +23,7 @@ public class GetListsWithItemsEndpoint(NoteBoardDBContext dbContext, TimeProvide
     public override async Task HandleAsync(Request request, CancellationToken ct)
     {
         if (request.FromUtc is not null && request.FromUtc > _timeProvider.GetUtcNow())
-            AddError(r => r.FromUtc, "Date 'from Utc' must be in the past!");
-        if (request.DueFromUtc is not null && request.DueFromUtc > _timeProvider.GetUtcNow())
-            AddError(r => r.DueFromUtc, "Date 'due From Utc' must be in the past!");
-        ThrowIfAnyErrors();
+            ThrowError(r => r.FromUtc, "Date 'from Utc' must be in the past!");
 
         //Get all items fullfilling the query
         var itemQuery = Repo.ToDoItems.Where(item => item.UserId == request.UserId);
