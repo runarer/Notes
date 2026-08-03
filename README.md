@@ -1,7 +1,5 @@
 # Notes
 
-Den orginale innleveringen er i branchen OldMain.
-
 Prosjektet er en API, men skiller seg noe fra 'Case 8: RestAPI Applikasjon' ved bruk av
 Vertical slice architecture og [Fast-Endpoints](https://fast-endpoints.com/).
 
